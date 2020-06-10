@@ -3,8 +3,7 @@
 import rospy
 from geometry_msgs.msg import PoseStamped
 from styx_msgs.msg import Lane, Waypoint
-from sklearn.neighbors import KDTree
-from sklearn import preprocessing
+from scipy.spatial import KDTree
 
 import numpy as np
 
