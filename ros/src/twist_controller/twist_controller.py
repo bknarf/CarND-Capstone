@@ -34,7 +34,7 @@ class Controller(object):
         self.accel_limit = accel_limit
         self.wheel_radius = wheel_radius
 
-        self.last_time = rospy.get_time
+        self.last_time = rospy.get_time()
 
 
     def control(self, dbw_enabled, linear_velocity, angular_velocity, current_velocity ):
