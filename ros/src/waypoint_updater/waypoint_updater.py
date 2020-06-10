@@ -66,7 +66,7 @@ class WaypointUpdater(object):
         signed_dist = np.dot(wp_dir,ego_xy-nearest_xy)
         if signed_dist > 0:
             #ego has already passed nearest_xy
-            return along_xy
+            return along_idx
         else:
             #ego has not passed nearest_xy yet
             return nearest_idx
