@@ -43,6 +43,7 @@ class WaypointUpdater(object):
         self.base_waypoints = None
         self.waypoints_2d = None
         self.waypoint_tree = None
+        self.pose = None
 
         rate = rospy.Rate(50)
         while not rospy.is_shutdown():
@@ -57,9 +58,8 @@ class WaypointUpdater(object):
         y = self.pose.pose.position.y
         next_idx = self.waypoint_tree.query([x,y],1)[1]
         next_xy = np.array(self.waypoint_tree[next_idx])
-        ego_dir = preprocessing.normalize(np.array([self.pose.pose.orientation.x,
-                                                    self.pose.pose.orientation.y])
-                                          , norm='l2')
+        ego_dir = np.array([self.pose.pose.orientation.x,
+                            self.pose.pose.orientation.y])
         ego_xy = np.array([x,y])
         #double signed_dist = b_dir_ego.dot(b_point_nb - b_center_ego);
         signed_dist = np.dot(ego_dir,next_xy-ego_xy)
