@@ -56,19 +56,23 @@ class WaypointUpdater(object):
     def get_next_waypoint_idx(self):
         x = self.pose.pose.position.x
         y = self.pose.pose.position.y
-        next_idx = self.waypoint_tree.query([x,y],1)[1]
-        next_xy = np.array(self.waypoint_tree.data[next_idx])
-        ego_dir = np.array([self.pose.pose.orientation.x,
-                            self.pose.pose.orientation.y])
+        nearest_idx = self.waypoint_tree.query([x,y],1)[1]
+        along_idx = (nearest_idx + 1) % len(self.waypoint_tree.data)
+        nearest_xy = np.array(self.waypoint_tree.data[nearest_idx])
+        along_xy = np.array(self.waypoint_tree.data[along_idx])
+        wp_dir = along_xy-nearest_xy
         ego_xy = np.array([x,y])
         #double signed_dist = b_dir_ego.dot(b_point_nb - b_center_ego);
-        signed_dist = np.dot(ego_dir,next_xy-ego_xy)
-        if signed_dist <= 0:
-            #next_xy is behind us
-            next_idx = (next_idx + 1) % len(self.waypoint_tree.data)
-        return next_idx
+        signed_dist = np.dot(wp_dir,ego_xy-nearest_xy)
+        if signed_dist > 0:
+            #ego has already passed nearest_xy
+            return along_xy
+        else:
+            #ego has not passed nearest_xy yet
+            return nearest_idx
 
     def publish_waypoints(self,idx):
+        rospy.logwarn("waypoint_updater:  next waypoint index = {0}".format(idx))
         lane = Lane()
         lane.header = self.base_waypoints.header
         lane.waypoints = self.base_waypoints.waypoints[idx:idx+LOOKAHEAD_WPS]
