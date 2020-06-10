@@ -65,7 +65,7 @@ class WaypointUpdater(object):
         signed_dist = np.dot(ego_dir,next_xy-ego_xy)
         if signed_dist <= 0:
             #next_xy is behind us
-            next_idx = (next_idx + 1) % len(self.waypoint_tree)
+            next_idx = (next_idx + 1) % len(self.waypoint_tree.data)
         return next_idx
 
     def publish_waypoints(self,idx):
