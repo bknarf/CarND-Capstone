@@ -57,7 +57,7 @@ class WaypointUpdater(object):
         x = self.pose.pose.position.x
         y = self.pose.pose.position.y
         next_idx = self.waypoint_tree.query([x,y],1)[1]
-        next_xy = np.array(self.waypoint_tree[next_idx])
+        next_xy = np.array(self.waypoint_tree.data[next_idx])
         ego_dir = np.array([self.pose.pose.orientation.x,
                             self.pose.pose.orientation.y])
         ego_xy = np.array([x,y])
