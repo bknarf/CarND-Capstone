@@ -134,7 +134,7 @@ class TLDetector(object):
         log.append("tl_detector:  ego_wp_idx:{0}".format(ego_wp_idx))
         relevant_tls = []
         for sl in self.stop_lights:
-            log.append("tl_detector:  sl.name:{0} line waypoint:{1} first waypoint:{2}".format(sl.name,sl.line_waypoint_idx,sl.before_line_waypoint_indxs))
+            log.append("tl_detector:  sl.name:{0} line waypoint:{1} first waypoint:{2}".format(sl.name,sl.line_waypoint_idx,sl.before_line_waypoint_indxs[0]))
             if sl.is_relevant(ego_wp_idx):
                 relevant_tls.append(sl)
         rospy.logwarn("\n".join(log))
@@ -186,7 +186,7 @@ class StopLight:
         self.before_line_waypoint_indxs = None
         self.after_line_waypoint_indxs = None
 
-        self.view_distance = 50
+        self.view_distance = 100
         #45 deg left and right of -approach direction
         self.half_viewing_angle = np.pi / 4.0
         self.simstate = None
@@ -228,25 +228,23 @@ class StopLight:
                         self.name,self.line_waypoint_idx))
 
                 angle_between = 0
-                distance = 0
+                distance_to_line = 0
                 #find indexes before the stopline
                 self.before_line_waypoint_indxs = []
-                idx = self.line_waypoint_idx+1
-                while distance < self.view_distance and angle_between < self.half_viewing_angle and angle_between > -self.half_viewing_angle:
+                idx = self.line_waypoint_idx
+                while distance_to_line < self.view_distance:
                     self.before_line_waypoint_indxs.append(idx)
                     idx -= 1
                     current_xy = np.array(self.waypoint_tree.data[idx])
                     pre_xy = np.array(self.waypoint_tree.data[idx-1])
-                    travel_dir = current_xy - pre_xy
-                    travel_dir /= np.sum(travel_dir)
-                    distance = np.linalg.norm(current_xy - self.light_position)
-                    angle_between = np.arccos(np.dot(travel_dir, self.approach_direction))
+                    distance_to_line = np.linalg.norm(current_xy - self.line_position)
+
 
                 #indexes after the stopline still moving closer to the stop light
                 self.after_line_waypoint_indxs = []
-                idx = self.line_waypoint_idx + 2
-                previous_dist_to_light = self.view_distance+1
-                dist_to_light = self.view_distance
+                idx = self.line_waypoint_idx + 1
+                previous_dist_to_light = 2000+1
+                dist_to_light = 2000
                 while dist_to_light < previous_dist_to_light:
                     self.after_line_waypoint_indxs.append(idx)
                     idx += 1
