@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import datetime
+from datetime import datetime
 
 import rospy
 from std_msgs.msg import Int32
