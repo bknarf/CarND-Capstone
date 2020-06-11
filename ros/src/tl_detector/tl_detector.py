@@ -177,8 +177,8 @@ class StopLight:
         self.approach_direction = None
         self.waypoint_tree = None
         self.line_waypoint_idx = None
-        self.visible_not_relevant_wpidxs = None
-        self.visible_relevant_wpidxs = None
+        self.before_line_waypoint_indxs = None
+        self.after_line_waypoint_indxs = None
 
         self.view_distance = 200
         #45 deg left and right of -approach direction
@@ -221,39 +221,36 @@ class StopLight:
                     "tl_detector:  Found line_waypoint_idx. name:{0} line_waypoint_idx{1}".format(
                         self.name,self.line_waypoint_idx))
 
-                rospy.logwarn(
-                    "tl_detector:  start searching  visible_relevant_wpidxs. name:{0}".format(
-                        self.name))
-                nearest_light_idx = self.waypoint_tree.query(self.light_position,1)[1]
-
-                #these waypoints are between stopline and traffic light
-                self.visible_not_relevant_wpidxs = []
-                for i in range(self.line_waypoint_idx,nearest_light_idx,1):
-                    dir_at_wp = np.array(self.waypoint_tree.data[i])-np.array(self.waypoint_tree.data[i-1])
-                    dir_at_wp /= np.sum(dir_at_wp)
-                    angle_between = np.arccos(np.dot(dir_at_wp,self.approach_direction))
-                    if angle_between < np.pi/2 and angle_between > -np.pi/2 :
-                        self.visible_not_relevant_wpidxs.append(i)
-                    else:
-                        rospy.logwarn("tl_detector:  found a traffic light, which is close to a waypoint not leading to the stopsign. name={0}".format(self.name))
-                        self.visible_not_relevant_wpidxs=[]
-                        break
                 angle_between = 0
                 distance = 0
-                self.visible_relevant_wpidxs = []
+                #find indexes before the stopline
+                self.before_line_waypoint_indxs = []
                 idx = self.line_waypoint_idx+1
                 while distance < self.view_distance and angle_between < self.half_viewing_angle and angle_between > -self.half_viewing_angle:
-                    self.visible_relevant_wpidxs.append(idx)
+                    self.before_line_waypoint_indxs.append(idx)
+                    idx -= 1
                     current_xy = np.array(self.waypoint_tree.data[idx])
-                    along_xy = np.array(self.waypoint_tree.data[idx+1])
-                    travel_dir = along_xy - current_xy
+                    pre_xy = np.array(self.waypoint_tree.data[idx-1])
+                    travel_dir = current_xy - pre_xy
                     travel_dir /= np.sum(travel_dir)
                     distance = np.linalg.norm(current_xy - self.light_position)
                     angle_between = np.arccos(np.dot(travel_dir, self.approach_direction))
+
+                #indexes after the stopline still moving closer to the stop light
+                self.after_line_waypoint_indxs = []
+                idx = self.line_waypoint_idx + 2
+                previous_dist_to_light = self.view_distance+1
+                dist_to_light = previous_dist_to_light
+                while dist_to_light < previous_dist_to_light:
+                    self.after_line_waypoint_indxs.append(idx)
                     idx += 1
+                    current_xy = np.array(self.waypoint_tree.data[idx])
+                    previous_dist_to_light = distance
+                    dist_to_light = np.linalg.norm(current_xy - self.light_position)
+
                 rospy.logwarn(
-                    "tl_detector:  found wpidxs. name:{0} len(visible_not_relevant_wpidxs):{1} len(visible_relevant_wpidxs):{2}".format(
-                        self.name, len(self.visible_not_relevant_wpidxs), len(self.visible_relevant_wpidxs)))
+                    "tl_detector:  found wpidxs. name:{0} len(before_line_waypoint_indxs):{1} len(after_line_waypoint_indxs):{2}".format(
+                        self.name, len(self.before_line_waypoint_indxs), len(self.before_line_waypoint_indxs)))
         else:
             rospy.logwarn(
                 "tl_detector:  Preconditions of StopLight.find_waypoint_idxs not fulfilled. StopLight.name:{0} line_position is None:{1} waypoint_tree is None:{2} light_position is None:{3}".format(
@@ -261,20 +258,19 @@ class StopLight:
 
     def is_relevant(self,wp_idx):
         self.find_waypoint_idxs()
-        if self.visible_relevant_wpidxs is None:
+        if self.before_line_waypoint_indxs is None:
             return False
         else:
-            return wp_idx in self.visible_relevant_wpidxs
+            return wp_idx in self.before_line_waypoint_indxs
 
     def is_visible(self,wp_idx):
         self.find_waypoint_idxs()
-        if self.visible_relevant_wpidxs is None or self.visible_not_relevant_wpidxs is None:
+        if self.before_line_waypoint_indxs is None or self.after_line_waypoint_indxs is None:
             return False
         else:
-            return wp_idx in self.visible_relevant_wpidxs or self.visible_not_relevant_wpidxs
+            return wp_idx in self.before_line_waypoint_indxs or wp_idx in self.after_line_waypoint_indxs
 
     def capture_img(self, img):
-
         if self.capture_images :
             if not os.path.exists(self.capture_image_path):
                 os.makedirs(self.capture_image_path)
