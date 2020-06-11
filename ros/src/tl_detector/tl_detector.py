@@ -85,6 +85,8 @@ class TLDetector(object):
             sl.set_light_position(np.array([tlm.pose.pose.position.x,tlm.pose.pose.position.y]))
             sl.set_simstate(tlm.state)
 
+
+
     def image_cb(self, msg):
         """Identifies red lights in the incoming camera image and publishes the index
             of the waypoint closest to the red light's stop line to /traffic_waypoint
@@ -187,7 +189,7 @@ class StopLight:
         self.capture_images = True
         self.capture_every_X_image = 3
         self.capture_counter = 0
-        self.capture_image_path = "~/captured_images"
+        self.capture_image_path = "/home/workspace/captured_images"
 
     def set_light_position(self, light_position):
         self.light_position = light_position
@@ -247,10 +249,6 @@ class StopLight:
                     current_xy = np.array(self.waypoint_tree.data[idx])
                     previous_dist_to_light = dist_to_light
                     dist_to_light = np.linalg.norm(current_xy - self.light_position)
-
-                rospy.logwarn(
-                    "tl_detector:  found wpidxs. name:{0} len(before_line_waypoint_indxs):{1} len(after_line_waypoint_indxs):{2}".format(
-                        self.name, len(self.before_line_waypoint_indxs), len(self.after_line_waypoint_indxs)))
         else:
             rospy.logwarn(
                 "tl_detector:  Preconditions of StopLight.find_waypoint_idxs not fulfilled. StopLight.name:{0} line_position is None:{1} waypoint_tree is None:{2} light_position is None:{3}".format(
