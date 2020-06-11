@@ -74,8 +74,12 @@ class TLDetector(object):
         self.waypoint_tree = waypoint_tree
 
     def traffic_cb(self, msg):
+        """
         rospy.logwarn(
             "tl_detector:  entering traffic cb. msg: {0}".format(msg))
+        """
+        rospy.logwarn(
+            "tl_detector:  entering traffic cb. len(msg.lights):{0} len(self.stop_lights:{1}".format(len(msg.lights),len(self.stop_lights)))
         for tlm, sl in zip(msg.lights, self.stop_lights):
             sl.set_light_position(np.array([tlm.pose.pose.position.x,tlm.pose.pose.position.y]))
             sl.set_simstate(tlm.state)
