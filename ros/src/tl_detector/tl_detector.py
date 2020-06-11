@@ -4,7 +4,8 @@ import datetime
 import rospy
 from std_msgs.msg import Int32
 from geometry_msgs.msg import PoseStamped, Pose
-from styx_msgs.msg import TrafficLightArray, TrafficLight
+from styx_msgs.msg import TrafficLightArray
+from styx_msgs.msg import TrafficLight
 from styx_msgs.msg import Lane
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
@@ -41,9 +42,9 @@ class TLDetector(object):
 
         config_string = rospy.get_param("/traffic_light_config")
         self.config = yaml.load(config_string)
-        self.traffic_lights = []
+        self.stop_lights = []
         for counter, stl in enumerate(self.config["stop_line_positions"]):
-            self.traffic_lights.append(TrafficLight("tl{0}".format(counter),np.array(stl)))
+            self.stop_lights.append(StopLight("tl{0}".format(counter), np.array(stl)))
         self.upcoming_red_light_pub = rospy.Publisher('/traffic_waypoint', Int32, queue_size=1)
 
         self.bridge = CvBridge()
@@ -68,12 +69,12 @@ class TLDetector(object):
         for wp in waypoints.waypoints:
             waypoints_2d.append(np.array([wp.pose.pose.position.x, wp.pose.pose.position.y]))
         waypoint_tree = KDTree(self.waypoints_2d)
-        for tl in self.traffic_lights:
+        for tl in self.stop_lights:
             tl.set_waypoint_tree(waypoint_tree)
         self.waypoint_tree = waypoint_tree
 
     def traffic_cb(self, msg):
-        for tlm, tl in zip(msg.lights,self.traffic_lights):
+        for tlm, tl in zip(msg.lights, self.stop_lights):
             tl.set_light_position(np.array([tlm.pose.pose.position.x,tlm.pose.pose.position.y]))
             tl.set_simstate(tlm.state)
 
@@ -121,7 +122,7 @@ class TLDetector(object):
 
         ego_wp_idx = self.get_next_waypoint_idx()
         relevant_tls = []
-        for tl in self.traffic_lights:
+        for tl in self.stop_lights:
             if tl.is_relevant(ego_wp_idx):
                 relevant_tls.append(tl)
 
@@ -159,7 +160,7 @@ class TLDetector(object):
         else:
             return 0
 
-class TrafficLight:
+class StopLight:
     def __init__(self, name, line_position):
         self.name = name
         #as 2D numpy array
