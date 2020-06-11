@@ -68,7 +68,7 @@ class TLDetector(object):
         waypoints_2d = []
         for wp in waypoints.waypoints:
             waypoints_2d.append(np.array([wp.pose.pose.position.x, wp.pose.pose.position.y]))
-        waypoint_tree = KDTree(self.waypoints_2d)
+        waypoint_tree = KDTree(waypoints_2d)
         for tl in self.stop_lights:
             tl.set_waypoint_tree(waypoint_tree)
         self.waypoint_tree = waypoint_tree
