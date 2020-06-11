@@ -221,7 +221,6 @@ class StopLight:
                     "tl_detector:  Found line_waypoint_idx. name:{0} line_waypoint_idx{1}".format(
                         self.name,self.line_waypoint_idx))
 
-            if not (self.visible_relevant_wpidxs is None or self.visible_not_relevant_wpidxs is None):
                 rospy.logwarn(
                     "tl_detector:  start searching  visible_relevant_wpidxs. name:{0}".format(
                         self.name))
