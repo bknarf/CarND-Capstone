@@ -235,8 +235,8 @@ class StopLight:
                     if angle_between < np.pi/2 and angle_between > -np.pi/2 :
                         self.visible_not_relevant_wpidxs.append(i)
                     else:
-                        rospy.logwarn("tl_detector:  found a traffic light, which is close to a waypoint not leading to the stopsign. line_position={0}".format(self.line_position))
-                        self.visible_not_relevant_wpidxs.clear()
+                        rospy.logwarn("tl_detector:  found a traffic light, which is close to a waypoint not leading to the stopsign. name={0}".format(self.name))
+                        self.visible_not_relevant_wpidxs=[]
                         break
                 angle_between = 0
                 distance = 0
