@@ -236,10 +236,24 @@ class StopLight:
                     angle_between = np.arccos(np.dot(travel_dir, self.approach_direction))
 
     def is_relevant(self,wp_idx):
-        return wp_idx in self.visible_relevant_wpidxs
+        self.find_waypoint_idxs()
+        if self.visible_relevant_wpidxs is None:
+            rospy.logwarn(
+                "tl_detector:  StopLight.visible_relevant_wpidxs is None. StopLight.name == {0}".format(
+                    self.name))
+            return False
+        else:
+            return wp_idx in self.visible_relevant_wpidxs
 
     def is_visible(self,wp_idx):
-        return wp_idx in self.visible_relevant_wpidxs or self.visible_not_relevant_wpidxs
+        self.find_waypoint_idxs()
+        if self.visible_relevant_wpidxs is None or self.visible_not_relevant_wpidxs is None:
+            rospy.logwarn(
+                "tl_detector:  StopLight.visible_relevant_wpidxs or visible_not_relevant_wpidxs is None. StopLight.name == {0}".format(
+                    self.name))
+            return False
+        else:
+            return wp_idx in self.visible_relevant_wpidxs or self.visible_not_relevant_wpidxs
 
     def capture_img(self, img):
 
