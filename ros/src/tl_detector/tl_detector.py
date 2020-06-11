@@ -130,11 +130,14 @@ class TLDetector(object):
 
 
         ego_wp_idx = self.get_next_waypoint_idx()
+        log = []
+        log.append("tl_detector:  ego_wp_idx:{0}".format(ego_wp_idx))
         relevant_tls = []
-        for tl in self.stop_lights:
-            if tl.is_relevant(ego_wp_idx):
-                relevant_tls.append(tl)
-
+        for sl in self.stop_lights:
+            log.append("tl_detector:  sl.name:{0} line waypoint:{1} first waypoint:{2}".format(sl.name,sl.line_waypoint_idx,sl.before_line_waypoint_indxs))
+            if sl.is_relevant(ego_wp_idx):
+                relevant_tls.append(sl)
+        rospy.logwarn("\n".join(log))
         if len(relevant_tls) == 0:
             #no relevant traffic light
             rospy.logwarn("tl_detector:  no relevant StopLight")
@@ -150,7 +153,10 @@ class TLDetector(object):
         return relevant_tls[0].line_waypoint_idx, state
 
     def get_next_waypoint_idx(self):
-        if (self.pose):
+
+        if self.pose is None:
+            return 0
+        else:
             x = self.pose.pose.position.x
             y = self.pose.pose.position.y
             nearest_idx = self.waypoint_tree.query([x,y],1)[1]
@@ -167,8 +173,6 @@ class TLDetector(object):
             else:
                 #ego has not passed nearest_xy yet
                 return nearest_idx
-        else:
-            return 0
 
 class StopLight:
     def __init__(self, name, line_position):
