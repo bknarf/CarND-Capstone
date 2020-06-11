@@ -250,6 +250,7 @@ class StopLight:
                     travel_dir /= np.sum(travel_dir)
                     distance = np.linalg.norm(current_xy - self.light_position)
                     angle_between = np.arccos(np.dot(travel_dir, self.approach_direction))
+                    idx += 1
                 rospy.logwarn(
                     "tl_detector:  found wpidxs. name:{0} len(visible_not_relevant_wpidxs):{1} len(visible_relevant_wpidxs):{2}".format(
                         self.name, len(self.visible_not_relevant_wpidxs), len(self.visible_relevant_wpidxs)))
