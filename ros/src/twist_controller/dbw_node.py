@@ -81,12 +81,14 @@ class DBWNode(object):
     def loop(self):
         rate = rospy.Rate(50) # 50Hz
         while not rospy.is_shutdown():
+            """
             rospy.logwarn("dbw_node:  current_velocity={0} angular_velocity={1} linear_velocity={2} dbw_enabled={3}".format(
                 self.current_velocity,
                 self.angular_velocity,
                 self.linear_velocity,
                 self.dbw_enabled)
             )
+            """
 
             if not None in (self.current_velocity,
                             self.angular_velocity,

@@ -72,7 +72,7 @@ class WaypointUpdater(object):
             return nearest_idx
 
     def publish_waypoints(self,idx):
-        rospy.logwarn("waypoint_updater:  next waypoint index = {0}".format(idx))
+        #rospy.logwarn("waypoint_updater:  next waypoint index = {0}".format(idx))
         lane = Lane()
         lane.header = self.base_waypoints.header
         lane.waypoints = self.base_waypoints.waypoints[idx:idx+LOOKAHEAD_WPS]
