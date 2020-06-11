@@ -279,7 +279,7 @@ class StopLight:
                 filename = "#".join([self.name , str(self.simstate) , ts])+".jpg"
                 path = os.path.join(self.capture_image_path,filename)
                 rospy.logwarn(
-                    "tl_detector:  writing image to {1}".format(path))
+                    "tl_detector:  writing image to {0}".format(path))
                 cv2.imwrite(path,img)
             self.capture_counter += 1
 
