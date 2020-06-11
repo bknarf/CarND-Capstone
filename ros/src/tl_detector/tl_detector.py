@@ -234,13 +234,14 @@ class StopLight:
                     travel_dir /= np.sum(travel_dir)
                     distance = np.linalg.norm(current_xy - self.light_position)
                     angle_between = np.arccos(np.dot(travel_dir, self.approach_direction))
+        else:
+            rospy.logwarn(
+                "tl_detector:  Preconditions of StopLight.find_waypoint_idxs not fulfilled. StopLight.name:{0} line_position is None:{1} waypoint_tree is None:{2} light_position is None:{3}".format(
+                    self.name, self.line_position is None, self.waypoint_tree is None, self.light_position is None))
 
     def is_relevant(self,wp_idx):
         self.find_waypoint_idxs()
         if self.visible_relevant_wpidxs is None:
-            rospy.logwarn(
-                "tl_detector:  StopLight.visible_relevant_wpidxs is None. StopLight.name == {0}".format(
-                    self.name))
             return False
         else:
             return wp_idx in self.visible_relevant_wpidxs
@@ -248,9 +249,6 @@ class StopLight:
     def is_visible(self,wp_idx):
         self.find_waypoint_idxs()
         if self.visible_relevant_wpidxs is None or self.visible_not_relevant_wpidxs is None:
-            rospy.logwarn(
-                "tl_detector:  StopLight.visible_relevant_wpidxs or visible_not_relevant_wpidxs is None. StopLight.name == {0}".format(
-                    self.name))
             return False
         else:
             return wp_idx in self.visible_relevant_wpidxs or self.visible_not_relevant_wpidxs
