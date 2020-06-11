@@ -180,7 +180,7 @@ class StopLight:
         self.before_line_waypoint_indxs = None
         self.after_line_waypoint_indxs = None
 
-        self.view_distance = 200
+        self.view_distance = 50
         #45 deg left and right of -approach direction
         self.half_viewing_angle = np.pi / 4.0
         self.simstate = None
@@ -240,12 +240,12 @@ class StopLight:
                 self.after_line_waypoint_indxs = []
                 idx = self.line_waypoint_idx + 2
                 previous_dist_to_light = self.view_distance+1
-                dist_to_light = previous_dist_to_light
+                dist_to_light = self.view_distance
                 while dist_to_light < previous_dist_to_light:
                     self.after_line_waypoint_indxs.append(idx)
                     idx += 1
                     current_xy = np.array(self.waypoint_tree.data[idx])
-                    previous_dist_to_light = distance
+                    previous_dist_to_light = dist_to_light
                     dist_to_light = np.linalg.norm(current_xy - self.light_position)
 
                 rospy.logwarn(
@@ -278,7 +278,9 @@ class StopLight:
                 ts = datetime.now().strftime("%Y%m%d-%H%M%S")
                 filename = "#".join([self.name , str(self.simstate) , ts])+".jpg"
                 path = os.path.join(self.capture_image_path,filename)
-                cv2.imwrite(filename,img)
+                rospy.logwarn(
+                    "tl_detector:  writing image to {1}".format(path))
+                cv2.imwrite(path,img)
             self.capture_counter += 1
 
 if __name__ == '__main__':
