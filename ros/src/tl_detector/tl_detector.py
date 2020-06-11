@@ -77,9 +77,10 @@ class TLDetector(object):
         """
         rospy.logwarn(
             "tl_detector:  entering traffic cb. msg: {0}".format(msg))
-        """
+
         rospy.logwarn(
             "tl_detector:  entering traffic cb. len(msg.lights):{0} len(self.stop_lights:{1}".format(len(msg.lights),len(self.stop_lights)))
+        """
         for tlm, sl in zip(msg.lights, self.stop_lights):
             sl.set_light_position(np.array([tlm.pose.pose.position.x,tlm.pose.pose.position.y]))
             sl.set_simstate(tlm.state)
@@ -134,6 +135,7 @@ class TLDetector(object):
 
         if len(relevant_tls) == 0:
             #no relevant traffic light
+            rospy.logwarn("tl_detector:  no relevant StopLight")
             return None, TrafficLight.UNKNOWN
         elif len(relevant_tls) > 1:
             rospy.logwarn(
