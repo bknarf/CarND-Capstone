@@ -195,7 +195,7 @@ class StopLight:
         self.simstate = state
 
     def find_waypoint_idxs(self):
-        if not np.any(np.array([self.line_position , self.waypoint_tree , self.light_position])) == None:
+        if not (self.line_position is None or self.waypoint_tree is None or self.light_position is None):
             if not self.line_waypoint_idx:
                 nearest_line_idx = self.waypoint_tree.query(self.line_position,1)[1]
                 nearest_line_xy = np.array(self.waypoint_tree.data[nearest_line_idx])
