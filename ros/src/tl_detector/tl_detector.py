@@ -250,7 +250,7 @@ class StopLight:
 
                 rospy.logwarn(
                     "tl_detector:  found wpidxs. name:{0} len(before_line_waypoint_indxs):{1} len(after_line_waypoint_indxs):{2}".format(
-                        self.name, len(self.before_line_waypoint_indxs), len(self.before_line_waypoint_indxs)))
+                        self.name, len(self.before_line_waypoint_indxs), len(self.after_line_waypoint_indxs)))
         else:
             rospy.logwarn(
                 "tl_detector:  Preconditions of StopLight.find_waypoint_idxs not fulfilled. StopLight.name:{0} line_position is None:{1} waypoint_tree is None:{2} light_position is None:{3}".format(
