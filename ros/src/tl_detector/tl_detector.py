@@ -74,9 +74,11 @@ class TLDetector(object):
         self.waypoint_tree = waypoint_tree
 
     def traffic_cb(self, msg):
-        for tlm, tl in zip(msg.lights, self.stop_lights):
-            tl.set_light_position(np.array([tlm.pose.pose.position.x,tlm.pose.pose.position.y]))
-            tl.set_simstate(tlm.state)
+        rospy.logwarn(
+            "tl_detector:  entering traffic cb. msg: {0}".format(msg))
+        for tlm, sl in zip(msg.lights, self.stop_lights):
+            sl.set_light_position(np.array([tlm.pose.pose.position.x,tlm.pose.pose.position.y]))
+            sl.set_simstate(tlm.state)
 
     def image_cb(self, msg):
         """Identifies red lights in the incoming camera image and publishes the index
