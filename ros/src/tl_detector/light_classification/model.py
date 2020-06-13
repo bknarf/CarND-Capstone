@@ -33,6 +33,7 @@ if __name__ == "__main__":
     train_data = data[0:start_validation]
     validation_data = data[start_validation:start_test]
     test_data = data[start_test:]
+    print("Samples: {}".format(len(data)))
     print("Training samples: {}".format(len(train_data)))
     print("Validation samples: {}".format(len(validation_data)))
     print("Testing samples: {}".format(len(test_data)))
