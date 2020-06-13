@@ -104,7 +104,6 @@ if __name__ == "__main__":
 
     print(model.summary())
 
-    #mean absolute error to better handle 'outliers' like curves
     model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adam(), metrics=['accuracy'])
 
 
