@@ -111,7 +111,7 @@ if __name__ == "__main__":
     model.add(Dense(units=84, activation='relu'))
     # Layer 5
     # Output Layer
-    model.add(Dense(units=10, activation='softmax'))
+    model.add(Dense(units=3, activation='softmax'))
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
     print(model.summary())
