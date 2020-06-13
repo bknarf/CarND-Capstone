@@ -119,7 +119,7 @@ if __name__ == "__main__":
     model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adam(), metrics=['accuracy'])
 
 
-    epochs = 3
+    epochs = 12
     #start the training
     history_fit = model.fit_generator(generator=train_generator, steps_per_epoch=math.ceil(len(train_data) / batchsize),
                                   validation_data=validation_generator,
