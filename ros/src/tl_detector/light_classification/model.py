@@ -98,7 +98,7 @@ if __name__ == "__main__":
                      kernel_size=(60,40),
                      strides=1,
                      activation='relu'))
-    model.add(Conv2D(filters=16,
+    model.add(Conv2D(filters=12,
                      kernel_size=5,
                      strides=1,
                      activation='relu',
@@ -111,8 +111,8 @@ if __name__ == "__main__":
                      input_shape=(14, 14, 6)))
     # Flatten
     model.add(Flatten())
-    model.add(Dense(units=120, activation='relu'))
-    model.add(Dense(units=84, activation='relu'))
+    model.add(Dense(units=60, activation='relu'))
+    model.add(Dense(units=30, activation='relu'))
     model.add(Dense(units=3, activation='softmax'))
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
