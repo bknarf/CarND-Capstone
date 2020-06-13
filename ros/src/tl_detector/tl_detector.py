@@ -148,7 +148,7 @@ class TLDetector(object):
                     len(relevant_tls)))
 
         #the traffic light decides if an image should be captured or not
-        relevant_tls[0].capture_img(self.camera_image)
+        relevant_tls[0].capture_img(self.camera_image, ego_wp_idx)
         state = self.light_classifier.get_classification(self.camera_image)
         return relevant_tls[0].line_waypoint_idx, state
 
@@ -193,7 +193,7 @@ class StopLight:
         self.capture_images = True
         self.capture_every_X_image = 3
         self.capture_counter = 0
-        self.capture_image_path = "/home/workspace/captured_images"
+        self.capture_image_path = "~/captured_images"
 
     def set_light_position(self, light_position):
         self.light_position = light_position
@@ -270,13 +270,14 @@ class StopLight:
         else:
             return wp_idx in self.before_line_waypoint_indxs or wp_idx in self.after_line_waypoint_indxs
 
-    def capture_img(self, img):
+    def capture_img(self, img, wp_idx):
         if self.capture_images :
             if not os.path.exists(self.capture_image_path):
                 os.makedirs(self.capture_image_path)
             if self.capture_counter % self.capture_every_X_image == 0:
                 ts = datetime.now().strftime("%Y%m%d-%H%M%S")
-                filename = "#".join([self.name , str(self.simstate) , ts])+".jpg"
+                dist = np.linalg.norm(np.array(self.waypoint_tree.data[wp_idx]) - self.line_position)
+                filename = "#".join([self.name , str(self.simstate) , dist, ts])+".jpg"
                 path = os.path.join(self.capture_image_path,filename)
                 rospy.logwarn(
                     "tl_detector:  writing image to {0}".format(path))
