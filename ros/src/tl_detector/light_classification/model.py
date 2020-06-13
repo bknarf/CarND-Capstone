@@ -84,11 +84,12 @@ if __name__ == "__main__":
 
     #crop to interesting area of image
     #normalize the data
-    model.add(Lambda(lambda x: (x / 255.0) - 0.5 ,input_shape=(600, 800, 3)))
-    model.add(Conv2D(filters=16, kernel_size=(55*3, 55), activation='relu'))
+    model.add(AveragePooling2D(input_shape=(600, 800, 3)))
+    model.add(Lambda(lambda x: (x / 255.0) - 0.5))
+    model.add(Conv2D(filters=6, kernel_size=(55*3, 55), activation='relu'))
     model.add(AveragePooling2D())
-    model.add(Conv2D(filters=8, kernel_size=(20, 10), activation='relu'))
-    model.add(AveragePooling2D())
+    model.add(Dropout(0.2))
+    model.add(Conv2D(filters=16, kernel_size=(20, 10), activation='relu'))
     model.add(Conv2D(filters=4, kernel_size=(6, 3), activation='relu'))
 
     model.add(Flatten())
@@ -99,7 +100,7 @@ if __name__ == "__main__":
 
     model.add(Dense(units=3, activation='softmax'))
 
-
+    print(model.summary())
 
     #mean absolute error to better handle 'outliers' like curves
     model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adam(), metrics=['accuracy'])
@@ -123,7 +124,7 @@ if __name__ == "__main__":
 
 
 
-    out = "/opt/carnd_p3/model.h5"
+    out = "/opt/carnd_capstone/model.h5"
     if len(sys.argv) > 1 :
         #if provided, take path from commandline
         out = sys.argv[1]
