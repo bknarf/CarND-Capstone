@@ -1,0 +1,111 @@
+Using TensorFlow backend.
+preparing images
+Samples: 4304
+Training samples: 3012
+Validation samples: 861
+Testing samples: 431
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #
+=================================================================
+lambda_1 (Lambda)            (None, 600, 800, 3)       0
+_________________________________________________________________
+conv2d_1 (Conv2D)            (None, 596, 796, 8)       608
+_________________________________________________________________
+activation_1 (Activation)    (None, 596, 796, 8)       0
+_________________________________________________________________
+max_pooling2d_1 (MaxPooling2 (None, 298, 398, 8)       0
+_________________________________________________________________
+conv2d_2 (Conv2D)            (None, 294, 394, 12)      2412
+_________________________________________________________________
+activation_2 (Activation)    (None, 294, 394, 12)      0
+_________________________________________________________________
+max_pooling2d_2 (MaxPooling2 (None, 147, 197, 12)      0
+_________________________________________________________________
+conv2d_3 (Conv2D)            (None, 143, 193, 18)      5418
+_________________________________________________________________
+activation_3 (Activation)    (None, 143, 193, 18)      0
+_________________________________________________________________
+max_pooling2d_3 (MaxPooling2 (None, 71, 96, 18)        0
+_________________________________________________________________
+conv2d_4 (Conv2D)            (None, 69, 94, 24)        3912
+_________________________________________________________________
+activation_4 (Activation)    (None, 69, 94, 24)        0
+_________________________________________________________________
+max_pooling2d_4 (MaxPooling2 (None, 34, 47, 24)        0
+_________________________________________________________________
+conv2d_5 (Conv2D)            (None, 32, 45, 28)        6076
+_________________________________________________________________
+activation_5 (Activation)    (None, 32, 45, 28)        0
+_________________________________________________________________
+max_pooling2d_5 (MaxPooling2 (None, 16, 22, 28)        0
+_________________________________________________________________
+dropout_1 (Dropout)          (None, 16, 22, 28)        0
+_________________________________________________________________
+flatten_1 (Flatten)          (None, 9856)              0
+_________________________________________________________________
+dense_1 (Dense)              (None, 300)               2957100
+_________________________________________________________________
+activation_6 (Activation)    (None, 300)               0
+_________________________________________________________________
+dense_2 (Dense)              (None, 75)                22575
+_________________________________________________________________
+activation_7 (Activation)    (None, 75)                0
+_________________________________________________________________
+dense_3 (Dense)              (None, 50)                3800
+_________________________________________________________________
+activation_8 (Activation)    (None, 50)                0
+_________________________________________________________________
+dense_4 (Dense)              (None, 15)                765
+_________________________________________________________________
+activation_9 (Activation)    (None, 15)                0
+_________________________________________________________________
+dense_5 (Dense)              (None, 3)                 48
+=================================================================
+Total params: 3,002,714
+Trainable params: 3,002,714
+Non-trainable params: 0
+_________________________________________________________________
+None
+Epoch 1/10
+2020-06-13 20:24:04.404729: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+2020-06-13 20:24:04.404797: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+2020-06-13 20:24:04.404826: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX instructions, but these are available on your machine and could speed up CPU computations.
+2020-06-13 20:24:04.404849: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use AVX2 instructions, but these are available on your machine and could speed up CPU computations.
+2020-06-13 20:24:04.404871: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use FMA instructions, but these are available on your machine and could speed up CPU computations.
+2020-06-13 20:24:04.516882: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:893] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-06-13 20:24:04.517685: I tensorflow/core/common_runtime/gpu/gpu_device.cc:955] Found device 0 with properties:
+name: Tesla K80
+major: 3 minor: 7 memoryClockRate (GHz) 0.8235
+pciBusID 0000:00:04.0
+Total memory: 11.17GiB
+Free memory: 11.09GiB
+2020-06-13 20:24:04.517744: I tensorflow/core/common_runtime/gpu/gpu_device.cc:976] DMA: 0
+2020-06-13 20:24:04.517769: I tensorflow/core/common_runtime/gpu/gpu_device.cc:986] 0:   Y
+2020-06-13 20:24:04.517811: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1045] Creating TensorFlow device (/gpu:0) -> (device: 0, name: Tesla K80, pci bus id: 0000:00:04.0)
+47/47 [==============================] - 89s - loss: 0.9707 - acc: 0.4973 - val_loss: 0.9457 - val_acc: 0.5252
+Epoch 2/10
+47/47 [==============================] - 84s - loss: 0.9582 - acc: 0.5090 - val_loss: 0.9525 - val_acc: 0.5107
+Epoch 3/10
+47/47 [==============================] - 83s - loss: 0.9542 - acc: 0.4993 - val_loss: 0.9715 - val_acc: 0.4969
+Epoch 4/10
+47/47 [==============================] - 83s - loss: 0.9142 - acc: 0.5342 - val_loss: 0.9369 - val_acc: 0.5596
+Epoch 5/10
+47/47 [==============================] - 83s - loss: 0.9056 - acc: 0.5447 - val_loss: 0.9456 - val_acc: 0.5508
+Epoch 6/10
+47/47 [==============================] - 83s - loss: 0.8302 - acc: 0.6000 - val_loss: 0.8587 - val_acc: 0.5809
+Epoch 7/10
+47/47 [==============================] - 83s - loss: 0.5040 - acc: 0.8114 - val_loss: 0.4726 - val_acc: 0.8519
+Epoch 8/10
+47/47 [==============================] - 83s - loss: 0.2045 - acc: 0.9371 - val_loss: 0.1416 - val_acc: 0.9624
+Epoch 9/10
+47/47 [==============================] - 83s - loss: 0.0829 - acc: 0.9771 - val_loss: 0.0806 - val_acc: 0.9737
+Epoch 10/10
+47/47 [==============================] - 83s - loss: 0.0907 - acc: 0.9764 - val_loss: 0.1447 - val_acc: 0.9598
+History[acc]=[0.49734042553191488, 0.50915875169606517, 0.49932157394843962, 0.52985074626865669, 0.53561736770691992, 0.59701492537313428, 0.80766621438263231, 0.93588873812754414, 0.97659430122116686, 0.97591587516960654]
+History[loss]=[0.97072342101563802, 0.96083289942877259, 0.95676317451119908, 0.91848808502730395, 0.91043424460748801, 0.83451822751897975, 0.50405394925838243, 0.20743341279927555, 0.084541930373125615, 0.092489472487161065]
+History[val_acc]=[0.52524038461538458, 0.51066499297861179, 0.496863236765341, 0.55959849412946805, 0.55081555894207923, 0.58092848225549298, 0.85194479312322369, 0.96235884582083975, 0.97365119077330697, 0.95984943538268508]
+History[val_loss]=[0.94572865962982178, 0.95246382818616915, 0.97147499116481173, 0.93694574426079036, 0.94562690328325205, 0.85870574648437115, 0.47256550181615009, 0.14164777363707759, 0.080589772280366387, 0.14473348626004559]
+Test loss: [0.074815385354061917, 0.9609375]
+Test samples: 431
+saving model to: /opt/carndcapstone/model.h5
+saved model to: /opt/carndcapstone/model.h5
