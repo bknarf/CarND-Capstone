@@ -41,7 +41,7 @@ if __name__ == "__main__":
     print("Testing samples: {}".format(len(test_data)))
 
     import cv2
-    import sklearn as skl
+    #import sklearn as skl
     import numpy as np
 
     def batch_data(data, batchsize=32):
@@ -63,7 +63,8 @@ if __name__ == "__main__":
                     labels.append(sample["label"])
                 X_train = np.array(images)
                 y_train = np.array(labels)
-                yield skl.utils.shuffle(X_train, y_train)
+                #yield skl.utils.shuffle(X_train, y_train)
+                yield X_train, y_train
 
     # Set the batchsize
     batchsize = 64
