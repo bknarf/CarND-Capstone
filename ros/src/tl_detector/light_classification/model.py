@@ -94,10 +94,10 @@ if __name__ == "__main__":
     model = Sequential()
 
     model.add(Lambda(lambda x: (x / 255.0) - 0.5,input_shape=(600, 800, 3)))
-    model.add(Conv2D(filters=3, kernel_size=(50, 25), padding="same", activation="relu"))
+    model.add(Conv2D(filters=3, kernel_size=(50, 25), strides=(2, 2), padding="same", activation="relu"))
     model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same", activation="relu"))
     model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same", activation="relu"))
-    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    model.add(MaxPooling2D(pool_size=(3, 3), strides=(3, 3)))
     model.add(Conv2D(filters=64, kernel_size=(3, 3), padding="same", activation="relu"))
     model.add(Conv2D(filters=64, kernel_size=(3, 3), padding="same", activation="relu"))
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
@@ -115,8 +115,8 @@ if __name__ == "__main__":
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
     # Flatten
     model.add(Flatten())
-    model.add(Dense(units=2048,activation="relu"))
-    model.add(Dense(units=2048,activation="relu"))
+    model.add(Dense(units=512,activation="relu"))
+    model.add(Dense(units=512,activation="relu"))
     model.add(Dense(units=3, activation="softmax"))
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
