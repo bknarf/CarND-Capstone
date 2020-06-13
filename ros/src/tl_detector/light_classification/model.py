@@ -88,10 +88,13 @@ if __name__ == "__main__":
     #normalize the data
     model.add(Lambda(lambda x: (x / 255.0) - 0.5))
 
-    model.add(Conv2D(filters=6, kernel_size=(3, 3), activation='relu', input_shape=(32, 32, 1)))
+    model.add(Conv2D(filters=6, kernel_size=(100, 50), activation='relu'))
     model.add(AveragePooling2D())
 
-    model.add(Conv2D(filters=16, kernel_size=(3, 3), activation='relu'))
+    model.add(Conv2D(filters=16, kernel_size=(20, 10), activation='relu'))
+    model.add(AveragePooling2D())
+
+    model.add(Conv2D(filters=16, kernel_size=(6, 3), activation='relu'))
     model.add(AveragePooling2D())
 
     model.add(Flatten())
@@ -106,6 +109,7 @@ if __name__ == "__main__":
 
     #mean absolute error to better handle 'outliers' like curves
     model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adam(), metrics=['accuracy'])
+
 
     epochs = 12
     #start the training
