@@ -94,22 +94,28 @@ if __name__ == "__main__":
     model = Sequential()
 
     model.add(Lambda(lambda x: (x / 255.0) - 0.5,input_shape=(600, 800, 3)))
-    model.add(AveragePooling2D(pool_size=4))
+
     ###smaller footprint model
     model.add(Conv2D(8, (5, 5)))
     model.add(Activation('relu'))
+    model.add(MaxPooling2D(pool_size=2))
 
     model.add(Conv2D(12, (5, 5)))
     model.add(Activation('relu'))
+    model.add(MaxPooling2D(pool_size=2))
 
     model.add(Conv2D(18, (5, 5)))
     model.add(Activation('relu'))
+    model.add(MaxPooling2D(pool_size=2))
 
     model.add(Conv2D(24, (3, 3)))
     model.add(Activation('relu'))
+    model.add(MaxPooling2D(pool_size=2))
 
     model.add(Conv2D(28, (3, 3)))
     model.add(Activation('relu'))
+    model.add(MaxPooling2D(pool_size=2))
+    model.add(Dropout(0.2))
 
     model.add(Flatten())
 
@@ -130,10 +136,10 @@ if __name__ == "__main__":
 
     print(model.summary())
 
-    model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adam(), metrics=['accuracy'])
+    model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adam(lr=0.0005), metrics=['accuracy'])
 
 
-    epochs = 12
+    epochs = 10
     #start the training
     history_fit = model.fit_generator(generator=train_generator, steps_per_epoch=math.ceil(len(train_data) / batchsize),
                                   validation_data=validation_generator,
