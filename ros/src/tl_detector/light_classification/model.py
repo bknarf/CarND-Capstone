@@ -94,32 +94,30 @@ if __name__ == "__main__":
     model = Sequential()
 
     model.add(Lambda(lambda x: (x / 255.0) - 0.5,input_shape=(600, 800, 3)))
-    model.add(Conv2D(filters=6,
-                     kernel_size=(60,40),
-                     strides=1,
-                     activation='relu'))
-    model.add(Conv2D(filters=12,
-                     kernel_size=5,
-                     strides=1,
-                     activation='relu',
-                     input_shape=(14, 14, 6)))
-    model.add(AveragePooling2D(pool_size=2, strides=2))
-    model.add(Conv2D(filters=4,
-                     kernel_size=5,
-                     strides=1,
-                     activation='relu',
-                     input_shape=(14, 14, 6)))
-    model.add(AveragePooling2D(pool_size=2, strides=2))
-    model.add(Conv2D(filters=4,
-                     kernel_size=3,
-                     strides=1,
-                     activation='relu',
-                     input_shape=(14, 14, 6)))
+    #model.add(Conv2D(filters=3, kernel_size=(50, 25), padding="same", activation="relu"))
+    model.add(Conv2D(filters=64, kernel_size=(3, 3), padding="same", activation="relu"))
+    model.add(Conv2D(filters=64, kernel_size=(3, 3), padding="same", activation="relu"))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    model.add(Conv2D(filters=128, kernel_size=(3, 3), padding="same", activation="relu"))
+    model.add(Conv2D(filters=128, kernel_size=(3, 3), padding="same", activation="relu"))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    model.add(Conv2D(filters=256, kernel_size=(3, 3), padding="same", activation="relu"))
+    model.add(Conv2D(filters=256, kernel_size=(3, 3), padding="same", activation="relu"))
+    model.add(Conv2D(filters=256, kernel_size=(3, 3), padding="same", activation="relu"))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    model.add(Conv2D(filters=512, kernel_size=(3, 3), padding="same", activation="relu"))
+    model.add(Conv2D(filters=512, kernel_size=(3, 3), padding="same", activation="relu"))
+    model.add(Conv2D(filters=512, kernel_size=(3, 3), padding="same", activation="relu"))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    model.add(Conv2D(filters=512, kernel_size=(3, 3), padding="same", activation="relu"))
+    model.add(Conv2D(filters=512, kernel_size=(3, 3), padding="same", activation="relu"))
+    model.add(Conv2D(filters=512, kernel_size=(3, 3), padding="same", activation="relu"))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
     # Flatten
     model.add(Flatten())
-    model.add(Dense(units=60, activation='relu'))
-    model.add(Dense(units=30, activation='relu'))
-    model.add(Dense(units=3, activation='softmax'))
+    model.add(Dense(units=4096,activation="relu"))
+    model.add(Dense(units=4096,activation="relu"))
+    model.add(Dense(units=3, activation="softmax"))
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
     print(model.summary())
