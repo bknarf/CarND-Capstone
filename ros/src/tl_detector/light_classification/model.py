@@ -84,7 +84,7 @@ if __name__ == "__main__":
 
     #crop to interesting area of image
     #normalize the data
-    model.add(Lambda(lambda x: (x / 255.0) - 0.5),input_shape=(600, 800, 3))
+    model.add(Lambda(lambda x: (x / 255.0) - 0.5 , input_shape=(600, 800, 3)))
 
     model.add(Conv2D(filters=16, kernel_size=(55*3, 55), activation='relu'))
     model.add(Conv2D(filters=8, kernel_size=(30, 10), activation='relu'))
