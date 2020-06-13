@@ -94,27 +94,22 @@ if __name__ == "__main__":
     model = Sequential()
 
     model.add(Lambda(lambda x: (x / 255.0) - 0.5,input_shape=(600, 800, 3)))
-
+    model.add(AveragePooling2D(pool_size=4))
     ###smaller footprint model
     model.add(Conv2D(8, (5, 5)))
     model.add(Activation('relu'))
-    model.add(AveragePooling2D(pool_size=2))
 
     model.add(Conv2D(12, (5, 5)))
     model.add(Activation('relu'))
-    model.add(AveragePooling2D(pool_size=2))
 
     model.add(Conv2D(18, (5, 5)))
     model.add(Activation('relu'))
-    model.add(AveragePooling2D(pool_size=2))
 
     model.add(Conv2D(24, (3, 3)))
     model.add(Activation('relu'))
-    model.add(AveragePooling2D(pool_size=2))
 
     model.add(Conv2D(28, (3, 3)))
     model.add(Activation('relu'))
-    model.add(AveragePooling2D(pool_size=2))
 
     model.add(Flatten())
 
