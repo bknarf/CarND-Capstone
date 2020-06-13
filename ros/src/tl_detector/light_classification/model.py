@@ -87,7 +87,7 @@ if __name__ == "__main__":
     model.add(AveragePooling2D(input_shape=(600, 800, 3)))
     model.add(Lambda(lambda x: (x / 255.0) - 0.5))
     model.add(Conv2D(kernel_size = (3*15,15), filters = 16, padding='same', activation='relu'))
-    model.add(AveragePooling2D())
+    #model.add(AveragePooling2D())
     model.add(Dropout(0.2))
     model.add(Conv2D(kernel_size = (3*5,5), filters = 32, padding='same', activation='relu'))
     model.add(AveragePooling2D())
