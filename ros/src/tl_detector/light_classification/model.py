@@ -24,7 +24,7 @@ if __name__ == "__main__":
         return res
 
 
-    image_paths = glob.glob("/home/workspace/CarND-Capstone/camera_images")
+    image_paths = glob.glob("/home/workspace/CarND-Capstone/camera_images/*.jpg")
 
     data = prepare_images(image_paths)
     random.shuffle(data)
