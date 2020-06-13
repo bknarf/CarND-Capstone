@@ -109,6 +109,12 @@ if __name__ == "__main__":
                      strides=1,
                      activation='relu',
                      input_shape=(14, 14, 6)))
+    model.add(AveragePooling2D(pool_size=2, strides=2))
+    model.add(Conv2D(filters=4,
+                     kernel_size=3,
+                     strides=1,
+                     activation='relu',
+                     input_shape=(14, 14, 6)))
     # Flatten
     model.add(Flatten())
     model.add(Dense(units=60, activation='relu'))
