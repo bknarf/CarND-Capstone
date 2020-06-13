@@ -94,29 +94,37 @@ if __name__ == "__main__":
     model = Sequential()
 
     model.add(Lambda(lambda x: (x / 255.0) - 0.5,input_shape=(600, 800, 3)))
-    model.add(Conv2D(filters=3, kernel_size=(50, 25), strides=(2, 2), padding="same", activation="relu"))
-    model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same", activation="relu"))
-    model.add(Conv2D(filters=32, kernel_size=(3, 3), padding="same", activation="relu"))
-    model.add(MaxPooling2D(pool_size=(3, 3), strides=(3, 3)))
-    model.add(Conv2D(filters=64, kernel_size=(3, 3), padding="same", activation="relu"))
-    model.add(Conv2D(filters=64, kernel_size=(3, 3), padding="same", activation="relu"))
-    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
-    model.add(Conv2D(filters=128, kernel_size=(3, 3), padding="same", activation="relu"))
-    model.add(Conv2D(filters=128, kernel_size=(3, 3), padding="same", activation="relu"))
-    model.add(Conv2D(filters=128, kernel_size=(3, 3), padding="same", activation="relu"))
-    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
-    model.add(Conv2D(filters=256, kernel_size=(3, 3), padding="same", activation="relu"))
-    model.add(Conv2D(filters=256, kernel_size=(3, 3), padding="same", activation="relu"))
-    model.add(Conv2D(filters=256, kernel_size=(3, 3), padding="same", activation="relu"))
-    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
-    model.add(Conv2D(filters=256, kernel_size=(3, 3), padding="same", activation="relu"))
-    model.add(Conv2D(filters=256, kernel_size=(3, 3), padding="same", activation="relu"))
-    model.add(Conv2D(filters=256, kernel_size=(3, 3), padding="same", activation="relu"))
-    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
-    # Flatten
+
+    ###smaller footprint model
+    model.add(Conv2D(8, (5, 5)))
+    model.add(Activation('relu'))
+
+    model.add(Conv2D(12, (5, 5)))
+    model.add(Activation('relu'))
+
+    model.add(Conv2D(18, (5, 5)))
+    model.add(Activation('relu'))
+
+    model.add(Conv2D(24, (3, 3)))
+    model.add(Activation('relu'))
+
+    model.add(Conv2D(28, (3, 3)))
+    model.add(Activation('relu'))
+
     model.add(Flatten())
-    model.add(Dense(units=512,activation="relu"))
-    model.add(Dense(units=512,activation="relu"))
+
+    model.add(Dense(300))
+    model.add(Activation('relu'))
+
+    model.add(Dense(75))
+    model.add(Activation('relu'))
+
+    model.add(Dense(50))
+    model.add(Activation('relu'))
+
+    model.add(Dense(15))
+    model.add(Activation('relu'))
+
     model.add(Dense(units=3, activation="softmax"))
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
