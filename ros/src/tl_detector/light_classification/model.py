@@ -94,9 +94,9 @@ if __name__ == "__main__":
 
     model.add(Flatten())
 
-    model.add(Dense(units=120, activation='relu'))
+    model.add(Dense(units=40, activation='relu'))
 
-    model.add(Dense(units=84, activation='relu'))
+    model.add(Dense(units=10, activation='relu'))
 
     model.add(Dense(units=3, activation='softmax'))
 
