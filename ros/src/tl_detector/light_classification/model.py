@@ -88,10 +88,11 @@ if __name__ == "__main__":
     model.add(Lambda(lambda x: (x / 255.0) - 0.5))
     model.add(Conv2D(filters=6, kernel_size=(55*3, 55), activation='relu'))
     model.add(Dropout(0.2))
-    model.add(Conv2D(filters=16, kernel_size=(20, 10), activation='relu'))
+    model.add(Conv2D(filters=12, kernel_size=(20, 10), activation='relu'))
     model.add(AveragePooling2D())
-    model.add(Conv2D(filters=16, kernel_size=(12, 4), activation='relu'))
-    model.add(Conv2D(filters=16, kernel_size=(3, 1), activation='relu'))
+    model.add(Conv2D(filters=8, kernel_size=(12, 4), activation='relu'))
+    model.add(AveragePooling2D())
+    model.add(Conv2D(filters=4, kernel_size=(6, 2), activation='relu'))
 
     model.add(Flatten())
 
