@@ -52,13 +52,13 @@ if __name__ == "__main__":
                 #labels/y
                 labels = []
                 for idx in range(offset, min(offset + batchsize, num_samples)):
-                    image=cv2.cvtColor(cv2.imread(name), cv2.COLOR_BGR2RGB)
-                    if data["mirror"] :
+                    sample = data[idx]
+                    image=cv2.cvtColor(cv2.imread(sample["name"]), cv2.COLOR_BGR2RGB)
+                    if sample["mirror"] :
                         #if mirroring is True, flip image, angle already flipped
                         image = cv2.flip(image, 1)
                     images.append(image)
-                    labels.append(data["label"])
-                labels = kera
+                    labels.append(sample["label"])
                 X_train = np.array(images)
                 y_train = tf.keras.utils.to_categorical(np.array(labels), num_classes=4)
                 yield skl.utils.shuffle(X_train, y_train)
