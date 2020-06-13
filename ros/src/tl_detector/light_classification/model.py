@@ -95,7 +95,8 @@ if __name__ == "__main__":
     model.add(AveragePooling2D())
     model.add(Dropout(0.2))
     model.add(Flatten())
-    model.add(Dense(512, activation='relu'))
+    model.add(Dense(220, activation='relu'))
+    model.add(Dense(11, activation='relu'))
     model.add(Dense(units=3, activation='softmax'))
 
     print(model.summary())
