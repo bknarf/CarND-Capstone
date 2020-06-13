@@ -63,7 +63,7 @@ if __name__ == "__main__":
                     labels.append(sample["label"])
                 X_train = np.array(images)
                 y_train = np.array(labels)
-                mixer = np.random(len(X_train))
+                mixer = np.random.random_integers(0,len(X_train)-1,len(X_train))
                 for idx, swap in enumerate(mixer):
                     swap=int(swap)
                     X_swap = X_train[swap]
