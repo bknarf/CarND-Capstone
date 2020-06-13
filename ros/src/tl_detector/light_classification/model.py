@@ -19,8 +19,10 @@ if __name__ == "__main__":
         res = []
         for imgp in imgps:
             label = imgp.split("#")[1]
-            res.append({"path" : imgp,"label" : label,"mirror" : True})
-            res.append({"path" : imgp, "label" : label, "mirror" : False})
+            one_hot = [0.0 , 0.0 , 0.0]
+            one_hot[label] = 1.0
+            res.append({"path" : imgp,"label" : one_hot,"mirror" : True})
+            res.append({"path" : imgp, "label" : one_hot, "mirror" : False})
         return res
 
 
@@ -60,7 +62,7 @@ if __name__ == "__main__":
                     images.append(image)
                     labels.append(sample["label"])
                 X_train = np.array(images)
-                y_train = tf.keras.utils.to_categorical(np.array(labels), num_classes=4)
+                y_train = np.array(labels)
                 yield skl.utils.shuffle(X_train, y_train)
 
     # Set the batchsize
@@ -116,7 +118,7 @@ if __name__ == "__main__":
     model.add(Activation('relu'))
 
     #red, yellow, green, none
-    model.add(Dense(4, activation = 'softmax'))
+    model.add(Dense(3, activation = 'softmax'))
 
 
 
