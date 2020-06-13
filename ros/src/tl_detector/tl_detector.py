@@ -277,7 +277,7 @@ class StopLight:
             if self.capture_counter % self.capture_every_X_image == 0:
                 ts = datetime.now().strftime("%Y%m%d-%H%M%S")
                 dist = np.linalg.norm(np.array(self.waypoint_tree.data[wp_idx]) - self.line_position)
-                filename = "#".join([self.name , str(self.simstate) , dist, ts])+".jpg"
+                filename = "#".join([self.name , str(self.simstate) , str(int(abs(dist))), ts])+".jpg"
                 path = os.path.join(self.capture_image_path,filename)
                 rospy.logwarn(
                     "tl_detector:  writing image to {0}".format(path))
