@@ -82,7 +82,7 @@ if __name__ == "__main__":
 
     model = Sequential()
 
-    model.add(Lambda(lambda x: (x / 255.0) - 0.5),input_shape=(600, 800, 3))
+    model.add(Lambda(lambda x: (x / 255.0) - 0.5,input_shape=(600, 800, 3)))
     # Layer 1
     # Conv Layer 1
     model.add(Conv2D(filters=6,
