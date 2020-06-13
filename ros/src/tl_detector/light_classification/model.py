@@ -84,14 +84,12 @@ if __name__ == "__main__":
 
     #crop to interesting area of image
     #normalize the data
-    model.add(Lambda(lambda x: (x / 255.0) - 0.5 , input_shape=(600, 800, 3)))
-
+    model.add(Lambda(lambda x: (x / 255.0) - 0.5 ,input_shape=(600, 800, 3)))
     model.add(Conv2D(filters=16, kernel_size=(55*3, 55), activation='relu'))
-    model.add(Conv2D(filters=8, kernel_size=(30, 10), activation='relu'))
-
+    model.add(AveragePooling2D())
+    model.add(Conv2D(filters=8, kernel_size=(20, 10), activation='relu'))
+    model.add(AveragePooling2D())
     model.add(Conv2D(filters=4, kernel_size=(6, 3), activation='relu'))
-
-    model.add(Conv2D(filters=4, kernel_size=(3, 1), activation='relu'))
 
     model.add(Flatten())
 
@@ -107,7 +105,7 @@ if __name__ == "__main__":
     model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adam(), metrics=['accuracy'])
 
 
-    epochs = 3
+    epochs = 12
     #start the training
     history_fit = model.fit_generator(generator=train_generator, steps_per_epoch=math.ceil(len(train_data) / batchsize),
                                   validation_data=validation_generator,
