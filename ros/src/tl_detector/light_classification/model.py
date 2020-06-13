@@ -53,7 +53,7 @@ if __name__ == "__main__":
                 labels = []
                 for idx in range(offset, min(offset + batchsize, num_samples)):
                     sample = data[idx]
-                    image=cv2.cvtColor(cv2.imread(sample["name"]), cv2.COLOR_BGR2RGB)
+                    image=cv2.cvtColor(cv2.imread(sample["path"]), cv2.COLOR_BGR2RGB)
                     if sample["mirror"] :
                         #if mirroring is True, flip image, angle already flipped
                         image = cv2.flip(image, 1)
