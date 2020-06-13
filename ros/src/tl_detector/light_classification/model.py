@@ -63,6 +63,17 @@ if __name__ == "__main__":
                     labels.append(sample["label"])
                 X_train = np.array(images)
                 y_train = np.array(labels)
+                mixer = np.random(len(X_train))
+                for idx, swap in enumerate(mixer):
+                    swap=int(swap)
+                    X_swap = X_train[swap]
+                    X_train[swap] = X_train[idx]
+                    X_train[idx] = X_swap
+
+                    y_swap = y_train[swap]
+                    y_train[swap] = y_train[idx]
+                    y_train[idx] = y_swap
+
                 #yield skl.utils.shuffle(X_train, y_train)
                 yield X_train, y_train
 
@@ -83,34 +94,21 @@ if __name__ == "__main__":
     model = Sequential()
 
     model.add(Lambda(lambda x: (x / 255.0) - 0.5,input_shape=(600, 800, 3)))
-    # Layer 1
-    # Conv Layer 1
     model.add(Conv2D(filters=6,
-                     kernel_size=5,
+                     kernel_size=(60,40),
                      strides=1,
-                     activation='relu',
-                     input_shape=(600, 800, 3)))
-    # Pooling layer 1
-    model.add(MaxPooling2D(pool_size=2, strides=2))
-    # Layer 2
-    # Conv Layer 2
+                     activation='relu'))
     model.add(Conv2D(filters=16,
                      kernel_size=5,
                      strides=1,
                      activation='relu',
                      input_shape=(14, 14, 6)))
     # Pooling Layer 2
-    model.add(MaxPooling2D(pool_size=2, strides=2))
+    model.add(AveragePooling2D(pool_size=2, strides=2))
     # Flatten
     model.add(Flatten())
-    # Layer 3
-    # Fully connected layer 1
     model.add(Dense(units=120, activation='relu'))
-    # Layer 4
-    # Fully connected layer 2
     model.add(Dense(units=84, activation='relu'))
-    # Layer 5
-    # Output Layer
     model.add(Dense(units=3, activation='softmax'))
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
