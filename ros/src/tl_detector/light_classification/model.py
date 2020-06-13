@@ -86,20 +86,16 @@ if __name__ == "__main__":
     #normalize the data
     model.add(AveragePooling2D(input_shape=(600, 800, 3)))
     model.add(Lambda(lambda x: (x / 255.0) - 0.5))
-    model.add(Conv2D(filters=6, kernel_size=(55*3, 55), activation='relu'))
+    model.add(Conv2D(16, 3, padding='same', activation='relu'))
+    model.add(MaxPooling2D())
     model.add(Dropout(0.2))
-    model.add(Conv2D(filters=12, kernel_size=(20, 10), activation='relu'))
-    model.add(AveragePooling2D())
-    model.add(Conv2D(filters=8, kernel_size=(12, 4), activation='relu'))
-    model.add(AveragePooling2D())
-    model.add(Conv2D(filters=4, kernel_size=(6, 2), activation='relu'))
-
+    model.add(Conv2D(32, 3, padding='same', activation='relu'))
+    model.add(MaxPooling2D())
+    model.add(Conv2D(64, 3, padding='same', activation='relu'))
+    model.add(MaxPooling2D())
+    model.add(Dropout(0.2))
     model.add(Flatten())
-
-    model.add(Dense(units=40, activation='relu'))
-
-    model.add(Dense(units=10, activation='relu'))
-
+    model.add(Dense(512, activation='relu'))
     model.add(Dense(units=3, activation='softmax'))
 
     print(model.summary())
