@@ -18,7 +18,7 @@ if __name__ == "__main__":
         print("preparing images")
         res = []
         for imgp in imgps:
-            label = imgp.split("#")[1]
+            label = int(imgp.split("#")[1])
             one_hot = [0.0 , 0.0 , 0.0]
             one_hot[label] = 1.0
             res.append({"path" : imgp,"label" : one_hot,"mirror" : True})
