@@ -86,16 +86,16 @@ if __name__ == "__main__":
     #normalize the data
     model.add(AveragePooling2D(input_shape=(600, 800, 3)))
     model.add(Lambda(lambda x: (x / 255.0) - 0.5))
-    model.add(Conv2D(16, 3, padding='same', activation='relu'))
+    model.add(Conv2D(kernel_size = (3*55,55), filters = 16, padding='same', activation='relu'))
     model.add(MaxPooling2D())
     model.add(Dropout(0.2))
-    model.add(Conv2D(32, 3, padding='same', activation='relu'))
+    model.add(Conv2D(kernel_size = (3*10,10), filters = 32, padding='same', activation='relu'))
     model.add(MaxPooling2D())
-    model.add(Conv2D(64, 3, padding='same', activation='relu'))
+    model.add(Conv2D(kernel_size = (3*2,2), filters = 16, padding='same', activation='relu'))
     model.add(MaxPooling2D())
     model.add(Dropout(0.2))
     model.add(Flatten())
-    model.add(Dense(512, activation='relu'))
+    model.add(Dense(100, activation='relu'))
     model.add(Dense(units=3, activation='softmax'))
 
     print(model.summary())
@@ -103,7 +103,7 @@ if __name__ == "__main__":
     model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adam(), metrics=['accuracy'])
 
 
-    epochs = 12
+    epochs = 3
     #start the training
     history_fit = model.fit_generator(generator=train_generator, steps_per_epoch=math.ceil(len(train_data) / batchsize),
                                   validation_data=validation_generator,
@@ -121,7 +121,7 @@ if __name__ == "__main__":
 
 
 
-    out = "/opt/carnd_capstone/model.h5"
+    out = "/opt/carndcapstone/model.h5"
     if len(sys.argv) > 1 :
         #if provided, take path from commandline
         out = sys.argv[1]
