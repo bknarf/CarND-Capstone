@@ -88,38 +88,19 @@ if __name__ == "__main__":
     #normalize the data
     model.add(Lambda(lambda x: (x / 255.0) - 0.5))
 
-    ###smaller footprint model
-    model.add(Conv2D(8, (5, 5)))
-    model.add(Activation('relu'))
+    model.add(Conv2D(filters=6, kernel_size=(3, 3), activation='relu', input_shape=(32, 32, 1)))
+    model.add(AveragePooling2D())
 
-    model.add(Conv2D(12, (5, 5)))
-    model.add(Activation('relu'))
-
-    model.add(Conv2D(18, (5, 5)))
-    model.add(Activation('relu'))
-
-    model.add(Conv2D(24, (3, 3)))
-    model.add(Activation('relu'))
-
-    model.add(Conv2D(28, (3, 3)))
-    model.add(Activation('relu'))
+    model.add(Conv2D(filters=16, kernel_size=(3, 3), activation='relu'))
+    model.add(AveragePooling2D())
 
     model.add(Flatten())
 
-    model.add(Dense(300))
-    model.add(Activation('relu'))
+    model.add(Dense(units=120, activation='relu'))
 
-    model.add(Dense(75))
-    model.add(Activation('relu'))
+    model.add(Dense(units=84, activation='relu'))
 
-    model.add(Dense(50))
-    model.add(Activation('relu'))
-
-    model.add(Dense(15))
-    model.add(Activation('relu'))
-
-    #red, yellow, green, none
-    model.add(Dense(3, activation = 'softmax'))
+    model.add(Dense(units=3, activation='softmax'))
 
 
 
