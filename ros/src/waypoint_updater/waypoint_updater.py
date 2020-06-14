@@ -124,12 +124,14 @@ class WaypointUpdater(object):
             if stopline_wp_idx > idx:
                 end_idx = stopline_wp_idx
                 dist_stop = max(self.distance(self.base_waypoints.waypoints, idx, end_idx),2)
-                x = [dist_stop +2, dist_stop  + 1, dist_stop ]
-                y = [current_velocity, current_velocity, current_velocity]
+                x = [dist_stop ]
+                y = [current_velocity]
                 stopping = True
 
-                x.append(0.5*dist_stop)
-                y.append(0.5*current_velocity)
+                x.append(0.75*dist_stop)
+                y.append(0.75*current_velocity)
+                x.append(0.1 * dist_stop)
+                y.append(0.20 * current_velocity)
                 x.append(0)
                 y.append(0)
                 x.append(-1)
@@ -168,7 +170,7 @@ class WaypointUpdater(object):
             if (not stopping and abs(y[-1]-y[0]) < 0.5):
                 fixed_speed = y[0]
             else:
-                spline_rep = interpolate.splrep(x, y, s=0.0)
+                spline_rep = interpolate.splrep(x, y, s=0.1)
 
 
             new_wps = []
@@ -190,6 +192,7 @@ class WaypointUpdater(object):
                 p.twist.twist.linear.x = vel
                 log_vel.append(vel)
                 new_wps.append(p)
+
             self.published_waypoints = new_wps
             self.published_waypoints_offset = idx
 
