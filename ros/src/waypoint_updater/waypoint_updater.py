@@ -136,7 +136,8 @@ class WaypointUpdater(object):
 
             else:
                 x = [start_dist + 1, start_dist]
-                y = [max(current_velocity,2), max(current_velocity,2)]
+                current_velocity = max(current_velocity,2)
+                y = [current_velocity, current_velocity]
                 target_velocity = min(self.MAX_VELOCITY,self.base_waypoints.waypoints[end_idx].twist.twist.linear.x)
                 diff_vel = target_velocity-current_velocity
                 safe_accel = 0.6*self.MAX_ACCEL
