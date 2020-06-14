@@ -125,8 +125,8 @@ class WaypointUpdater(object):
                 x = [start_dist + 1, start_dist]
                 y = [current_velocity, current_velocity]
                 stopping = True
-                dist_stop = self.distance(self.base_waypoints.waypoints, stopline_wp_idx, end_idx)
-                x.append(max(dist_stop,0.5))
+                dist_stop = max(self.distance(self.base_waypoints.waypoints, stopline_wp_idx, end_idx),0.5)
+                x.append(dist_stop)
                 y.append(0.0)
                 x.append(0)
                 y.append(0)
@@ -177,7 +177,7 @@ class WaypointUpdater(object):
                 else:
                     vel = interpolate.splev(dist, spline_rep, der=0).sum()
 
-                if vel < 0.1 and stopping and dist < 1:
+                if stopping and abs(dist-dist_stop) < 0.5:
                     vel = 0.0
                 p.twist.twist.linear.x = vel
                 log_vel.append(vel)
