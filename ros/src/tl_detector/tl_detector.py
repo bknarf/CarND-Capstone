@@ -263,10 +263,12 @@ class StopLight:
                     current_xy = np.array(self.waypoint_tree.data[idx])
                     previous_dist_to_light = dist_to_light
                     dist_to_light = np.linalg.norm(current_xy - self.light_position)
+        """
         else:
             rospy.logwarn(
                 "tl_detector:  Preconditions of StopLight.find_waypoint_idxs not fulfilled. StopLight.name:{0} line_position is None:{1} waypoint_tree is None:{2} light_position is None:{3}".format(
                     self.name, self.line_position is None, self.waypoint_tree is None, self.light_position is None))
+        """
 
     def is_relevant(self,wp_idx):
         self.find_waypoint_idxs()
