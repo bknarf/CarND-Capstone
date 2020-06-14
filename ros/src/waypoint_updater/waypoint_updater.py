@@ -112,7 +112,7 @@ class WaypointUpdater(object):
                 #cruising and we should copy over some waypoints
                 first_copied = idx+len(self.published_waypoints)
                 if first_copied < len(self.base_waypoints.waypoints):
-                    self.published_waypoints.append(self.base_waypoints.waypoints[first_copied:end_idx])
+                    self.published_waypoints.extend(self.base_waypoints.waypoints[first_copied:end_idx])
         else:
             #either stopping, standing still or starting
 
