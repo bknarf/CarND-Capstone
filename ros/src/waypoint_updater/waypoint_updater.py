@@ -38,7 +38,7 @@ class WaypointUpdater(object):
         rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
         rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
         rospy.Subscriber('/traffic_waypoint', Int32, self.traffic_cb)
-        rospy.Subscriber('/current_velocity', TwistStamped, self.velocity_cb)
+        #rospy.Subscriber('/current_velocity', TwistStamped, self.velocity_cb)
 
         # TODO: Add a subscriber for /traffic_waypoint and /obstacle_waypoint below
 
@@ -50,12 +50,14 @@ class WaypointUpdater(object):
         self.base_waypoints = None
         self.waypoints_2d = None
         self.waypoint_tree = None
-        self.current_velocity = 0
         self.pose = None
         self.stopline_wp_idx = -1
+        self.waypoint_speeds = None
 
         self.MAX_VELOCITY = (rospy.get_param('waypoint_loader/velocity')* 1000.) / (60. * 60.)
         self.MAX_ACCEL = 10.0
+
+        self.last_lane = None
 
 
         rate = rospy.Rate(50)
@@ -66,10 +68,8 @@ class WaypointUpdater(object):
                 self.publish_waypoints(next_waypoint_idx)
             rate.sleep()
 
-    def velocity_cb(self, msg):
-        self.current_velocity = msg.twist.linear.x
 
-    def get_next_waypoint_idx(self):
+    def get_next_waypoint_idx(self, pose, waypoints):
         x = self.pose.pose.position.x
         y = self.pose.pose.position.y
         nearest_idx = self.waypoint_tree.query([x,y],1)[1]
@@ -95,7 +95,13 @@ class WaypointUpdater(object):
         #    len(self.base_waypoints.waypoints),idx, last_idx))
         start_dist = self.distance(self.base_waypoints.waypoints, idx, last_idx)
         x = [ start_dist +1, start_dist ]
-        current_velocity = self.current_velocity
+        if self.waypoint_speeds is None:
+            current_velocity = 0
+        elif idx in self.waypoint_speeds:
+            current_velocity = self.waypoint_speeds[idx]
+        else:
+            current_velocity = 0
+
         y = [ current_velocity , current_velocity ]
         stopping = False
         if self.stopline_wp_idx > idx and self.stopline_wp_idx < last_idx:
@@ -121,9 +127,10 @@ class WaypointUpdater(object):
 
         lane = Lane()
 
-        rospy.logwarn("waypoint_updater:  x:{0} y:{1}".format(x,y))
+        rospy.logwarn("waypoint_updater: stopping:{0} x:{1} y:{2}".format(stopping,x,y))
         spline_rep = interpolate.splrep(x, y)
         new_wps = []
+        self.waypoint_speeds = {}
         for i in range(idx, last_idx):
             p = Waypoint()
             p.pose = self.base_waypoints.waypoints[i].pose
@@ -134,8 +141,8 @@ class WaypointUpdater(object):
             else:
                 vel = max(vel , 0.2)
             p.twist.twist.linear.x = vel
+            self.waypoint_speeds[idx] = vel
             new_wps.append(p)
-
         lane.waypoints = new_wps
         self.final_waypoints_pub.publish(lane)
 
