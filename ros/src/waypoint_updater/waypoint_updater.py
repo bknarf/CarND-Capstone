@@ -136,7 +136,7 @@ class WaypointUpdater(object):
             else:
                 target_velocity = min(self.MAX_VELOCITY,self.base_waypoints.waypoints[end_idx].twist.twist.linear.x)
                 diff_vel = target_velocity-current_velocity
-                safe_accel = 0.8*self.MAX_ACCEL
+                safe_accel = 0.6*self.MAX_ACCEL
                 t = abs(diff_vel/safe_accel)
                 dist_t = start_dist - (t*current_velocity + math.copysign(0.5*safe_accel**2,diff_vel))
                 x.append(dist_t)
@@ -179,7 +179,7 @@ class WaypointUpdater(object):
                 if vel < 0.1 and stopping and dist < 1:
                     vel = 0.0
                 else:
-                    vel = max(vel , 2)
+                    vel = max(vel , 3)
                 p.twist.twist.linear.x = vel
                 log_vel.append(vel)
                 new_wps.append(p)
