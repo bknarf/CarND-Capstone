@@ -115,14 +115,13 @@ class WaypointUpdater(object):
         lane = Lane()
 
         spline_rep = interpolate.splrep(x, y)
-        if self.stopline_wp_idx > idx and self.stopline_wp_idx < idx+LOOKAHEAD_WPS :
-            #decelerating for traffic light
-            for i, wp in enumerate(lane.waypoints):
-                p = Waypoint()
-                p.pose = lane.waypoints[i].pose
-                dist = self.distance(lane.waypoints,i,idx+LOOKAHEAD_WPS)
-                vel = interpolate.splev(dist, spline_rep, der=0)
-                p.twist.twist.linear.x = vel
+        for i in range(idx, min(idx + LOOKAHEAD_WPS,len(self.base_waypoints.waypoints))):
+            p = Waypoint()
+            p.pose = self.base_waypoints.waypoints[i].pose
+            dist = self.distance(self.base_waypoints.waypoints,i,min(idx + LOOKAHEAD_WPS,len(self.base_waypoints.waypoints)))
+            vel = interpolate.splev(dist, spline_rep, der=0)
+            p.twist.twist.linear.x = vel
+            Lane.waypoints.append(p)
 
         self.final_waypoints_pub.publish(lane)
 
