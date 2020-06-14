@@ -89,7 +89,7 @@ class WaypointUpdater(object):
 
     def publish_waypoints(self,idx):
         idx = max(0, idx)
-        last_idx = min(idx + LOOKAHEAD_WPS,len(self.base_waypoints.waypoints))
+        last_idx = min(idx + LOOKAHEAD_WPS,len(self.base_waypoints.waypoints)-1)
         rospy.logwarn("waypoint_updater:  next waypoint index = {0}".format(idx))
         rospy.logwarn("waypoint_updater:  len(base_waypoints.waypoints):{0} wp1:{1} wp2:{2}".format(
             len(self.base_waypoints.waypoints),idx, last_idx))
