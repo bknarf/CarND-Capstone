@@ -136,6 +136,7 @@ class WaypointUpdater(object):
                 y.append(0)
 
             else:
+                start_dist = max(self.distance(self.base_waypoints.waypoints, idx, end_idx), 2)
                 x = [start_dist + 1, start_dist]
                 current_velocity = max(current_velocity,2)
                 y = [current_velocity, current_velocity]
