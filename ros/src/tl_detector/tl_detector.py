@@ -129,8 +129,6 @@ class TLDetector(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
-
-
         ego_wp_idx = self.get_next_waypoint_idx()
         log = []
         log.append("tl_detector:  ego_wp_idx:{0}".format(ego_wp_idx))
@@ -164,6 +162,9 @@ class TLDetector(object):
     def get_next_waypoint_idx(self):
 
         if self.pose is None or self.waypoint_tree is None:
+            rospy.logwarn(
+                "tl_detector:  cannot get next waypoint. pose is None:{0} waypoint_tree is None: {1}".format(
+                    self.pose is None,  self.waypoint_tree is None))
             return 0
         else:
             x = self.pose.pose.position.x
