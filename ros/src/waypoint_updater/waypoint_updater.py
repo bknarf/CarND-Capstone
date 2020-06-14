@@ -141,7 +141,7 @@ class WaypointUpdater(object):
             if fixed_speed:
                 vel = fixed_speed
             else:
-                vel = interpolate.splev(dist, spline_rep, der=0)[0]
+                vel = interpolate.splev(dist, spline_rep, der=0).sum()
                 if stopping:
                     log_vel.append(vel)
                 if vel < 0.1 and stopping and dist < 1.5:
