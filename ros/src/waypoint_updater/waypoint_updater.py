@@ -113,9 +113,6 @@ class WaypointUpdater(object):
                 first_copied = idx+len(self.published_waypoints)
                 if first_copied < len(self.base_waypoints.waypoints):
                     self.published_waypoints.extend(self.base_waypoints.waypoints[first_copied:end_idx])
-                rospy.logwarn(
-                    "waypoint_updater: idx:{0} len(self.published_waypoints):{1} : first_copied:{2} end_idx:{3}".format(idx,
-                        len(self.published_waypoints), first_copied, end_idx))
         else:
             #either stopping, standing still or starting or manual control
 
