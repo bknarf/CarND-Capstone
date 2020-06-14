@@ -3,6 +3,7 @@ from keras.models import load_model
 import numpy as np
 import os
 import tensorflow as tf
+import rospy
 
 class TLClassifier(object):
     def __init__(self):
@@ -23,5 +24,8 @@ class TLClassifier(object):
         with self.graph.as_default():
             image_array = np.asarray(image)
             image_array = image_array[None, :, :, :]
-            prediction = int(self.model.predict(image_array, batch_size=1))
-            return prediction
+            prediction = self.model.predict(image_array, batch_size=1)
+            rospy.logwarn(
+                "tl_classifier:  prediction:{0}".format(
+                    prediction))
+            return int(prediction[0])
