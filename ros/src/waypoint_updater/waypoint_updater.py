@@ -2,8 +2,10 @@
 
 import rospy
 from geometry_msgs.msg import PoseStamped
-from styx_msgs.msg import Lane, Waypoint
+from styx_msgs.msg import Lane, Waypoint, Int32
+from geometry_msgs.msg import TwistStamped
 from scipy.spatial import KDTree
+from scipy import interpolate
 
 import numpy as np
 
@@ -32,18 +34,28 @@ class WaypointUpdater(object):
         rospy.init_node('waypoint_updater')
 
         rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
+        rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
         rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
+        rospy.Subscriber('/traffic_waypoint', Int32, self.traffic_cb)
+        rospy.Subscriber('/current_velocity', TwistStamped, self.velocity_cb)
 
         # TODO: Add a subscriber for /traffic_waypoint and /obstacle_waypoint below
 
 
+        self.final_waypoints_pub = rospy.Publisher('final_waypoints', Lane, queue_size=1)
         self.final_waypoints_pub = rospy.Publisher('final_waypoints', Lane, queue_size=1)
 
         # TODO: Add other member variables you need below
         self.base_waypoints = None
         self.waypoints_2d = None
         self.waypoint_tree = None
+        self.current_velocity = 0
         self.pose = None
+        self.stopline_wp_idx = -1
+
+        self.MAX_VELOCITY = (rospy.get_param('~velocity')* 1000.) / (60. * 60.)
+        self.MAX_ACCEL = 10.0
+
 
         rate = rospy.Rate(50)
         while not rospy.is_shutdown():
@@ -52,6 +64,9 @@ class WaypointUpdater(object):
                 next_waypoint_idx = self.get_next_waypoint_idx()
                 self.publish_waypoints(next_waypoint_idx)
             rate.sleep()
+
+    def velocity_cb(self, msg):
+        self.current_velocity = msg.twist.linear.x
 
     def get_next_waypoint_idx(self):
         x = self.pose.pose.position.x
@@ -76,6 +91,29 @@ class WaypointUpdater(object):
         lane = Lane()
         lane.header = self.base_waypoints.header
         lane.waypoints = self.base_waypoints.waypoints[idx:idx+LOOKAHEAD_WPS]
+        start_dist = self.distance(lane.waypoints, idx, idx + LOOKAHEAD_WPS)
+        x = [ start_dist - 1, start_dist ]
+        current_velocity = self.current_velocity
+        y = [ current_velocity , current_velocity ]
+        if self.stopline_wp_idx > idx and self.stopline_wp_idx < idx + LOOKAHEAD_WPS:
+            dist_stop = self.distance(self.base_waypoints.waypoints, self.stopline_wp_idx, idx+LOOKAHEAD_WPS)
+            #stop 3m in front of line
+            dist_stop -= 3
+            x.append(dist_stop)
+            y.append(0.0)
+
+        x.append(0)
+        y.append(self.base_waypoints.waypoints[idx+LOOKAHEAD_WPS])
+        spline_rep = interpolate.splrep(x, y)
+        if self.stopline_wp_idx > idx and self.stopline_wp_idx < idx+LOOKAHEAD_WPS :
+            #decelerating for traffic light
+            for i, wp in enumerate(lane.waypoints):
+                p = Waypoint()
+                p.pose = lane.waypoints[i].pose
+                dist = self.distance(lane.waypoints,i,idx+LOOKAHEAD_WPS)
+                vel = interpolate.splev(dist, spline_rep, der=0)
+                p.twist.twist.linear.x = vel
+
         self.final_waypoints_pub.publish(lane)
 
     def pose_cb(self, msg):
@@ -90,8 +128,7 @@ class WaypointUpdater(object):
             self.waypoint_tree = KDTree(self.waypoints_2d)
 
     def traffic_cb(self, msg):
-        # TODO: Callback for /traffic_waypoint message. Implement
-        pass
+        self.stopline_wp_idx = msg
 
     def obstacle_cb(self, msg):
         # TODO: Callback for /obstacle_waypoint message. We will implement it later

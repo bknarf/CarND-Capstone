@@ -143,7 +143,7 @@ class TLDetector(object):
             log.append("tl_detector:  sl.name:{0} line waypoint:{1} first waypoint:{2}".format(sl.name,sl.line_waypoint_idx,sl.before_line_waypoint_indxs[0]))
             if sl.is_relevant(ego_wp_idx):
                 relevant_tls.append(sl)
-        rospy.logwarn("\n".join(log))
+        #rospy.logwarn("\n".join(log))
         if len(relevant_tls) == 0:
             #no relevant traffic light
             rospy.logwarn("tl_detector:  no relevant StopLight")
