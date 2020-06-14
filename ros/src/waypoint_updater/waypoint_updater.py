@@ -54,7 +54,7 @@ class WaypointUpdater(object):
         self.pose = None
         self.stopline_wp_idx = -1
 
-        self.MAX_VELOCITY = (rospy.get_param('~velocity')* 1000.) / (60. * 60.)
+        self.MAX_VELOCITY = (rospy.get_param('waypoint_loader/velocity')* 1000.) / (60. * 60.)
         self.MAX_ACCEL = 10.0
 
 
