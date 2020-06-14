@@ -146,7 +146,7 @@ class TLDetector(object):
         #rospy.logwarn("\n".join(log))
         if len(relevant_tls) == 0:
             #no relevant traffic light
-            rospy.logwarn("tl_detector:  no relevant StopLight")
+            #rospy.logwarn("tl_detector:  no relevant StopLight")
             return None, TrafficLight.UNKNOWN
         elif len(relevant_tls) > 1:
             rospy.logwarn(
@@ -160,7 +160,7 @@ class TLDetector(object):
         if state == relevant_tls[0].simstate :
             self.count_correct_predictions += 1
         rospy.logwarn(
-            "tl_detector:  traffic light prediction_accuracy:{0} predictions:{1} correct predictions:{2}".format(
+            "tl_detector:  traffic light prediction_accuracy:{0:f} predictions:{1} correct predictions:{2}".format(
                 self.count_correct_predictions/self.count_predictions, self.count_predictions, self.count_correct_predictions))
 
         return relevant_tls[0].line_waypoint_idx, state

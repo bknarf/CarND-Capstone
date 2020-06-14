@@ -117,6 +117,7 @@ class WaypointUpdater(object):
 
         lane = Lane()
 
+        rospy.logwarn("waypoint_updater:  x:{0} y:{1}".format(x,y))
         spline_rep = interpolate.splrep(x, y)
         new_wps = []
         for i in range(idx, last_idx):
