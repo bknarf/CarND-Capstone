@@ -106,9 +106,7 @@ class WaypointUpdater(object):
         if self.stopline_wp_idx > idx and self.stopline_wp_idx < last_idx:
             stopping = True
             dist_stop = self.distance(self.base_waypoints.waypoints, self.stopline_wp_idx, last_idx)
-            #stop 3m in front of line
-            dist_stop += 3
-            x.append(min(dist_stop,3.0))
+            x.append(min(dist_stop,0.5))
             y.append(0.0)
 
         if stopping:
@@ -116,32 +114,42 @@ class WaypointUpdater(object):
             y.append(0)
         else:
             x.append(0)
-            y.append(self.base_waypoints.waypoints[last_idx].twist.twist.linear.x)
+            y.append(min(self.MAX_VELOCITY,self.base_waypoints.waypoints[last_idx].twist.twist.linear.x))
 
         x.append(-1.0)
         y.append(y[-1])
 
         x.reverse()
         y.reverse()
+        fixed_speed = False
+        if (not stopping and abs(y[-1]-y[0]) < 0.5):
+            fixed_speed = y[0]
+        else:
+            rospy.logwarn(
+                "waypoint_updater: stopping:{0} stopline_idx:{1} x:{2} y:{3}".format(stopping, self.stopline_wp_idx, x,
+                                                                                     y))
+            spline_rep = interpolate.splrep(x, y)
 
-        lane = Lane()
 
-        rospy.logwarn("waypoint_updater: stopping:{0} stopline_idx:{1} x:{2} y:{3}".format(stopping,self.stopline_wp_idx,x,y))
-        spline_rep = interpolate.splrep(x, y)
         new_wps = []
         self.waypoint_speeds = {}
         for i in range(idx, last_idx):
             p = Waypoint()
             p.pose = self.base_waypoints.waypoints[i].pose
             dist = self.distance(self.base_waypoints.waypoints,i,last_idx)
-            vel = interpolate.splev(dist, spline_rep, der=0)
-            if vel < 0.1 and stopping:
-                vel=0
+            if fixed_speed:
+                vel = fixed_speed
             else:
-                vel = max(vel , 0.2)
+                vel = interpolate.splev(dist, spline_rep, der=0)
+                if vel < 0.1 and stopping:
+                    vel=0
+                else:
+                    vel = max(vel , 0.2)
             p.twist.twist.linear.x = vel
             self.waypoint_speeds[idx] = vel
             new_wps.append(p)
+
+        lane = Lane()
         lane.waypoints = new_wps
         self.final_waypoints_pub.publish(lane)
 
