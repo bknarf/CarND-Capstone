@@ -5,6 +5,7 @@ from geometry_msgs.msg import PoseStamped
 from styx_msgs.msg import Lane, Waypoint
 from geometry_msgs.msg import TwistStamped
 from std_msgs.msg import Int32
+from lowpass import LowPassFilter
 from scipy.spatial import KDTree
 from scipy import interpolate
 
@@ -38,7 +39,7 @@ class WaypointUpdater(object):
         rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
         rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
         rospy.Subscriber('/traffic_waypoint', Int32, self.traffic_cb)
-        #rospy.Subscriber('/current_velocity', TwistStamped, self.velocity_cb)
+        rospy.Subscriber('/current_velocity', TwistStamped, self.velocity_cb)
 
         # TODO: Add a subscriber for /traffic_waypoint and /obstacle_waypoint below
 
@@ -56,6 +57,11 @@ class WaypointUpdater(object):
 
         self.MAX_VELOCITY = (rospy.get_param('waypoint_loader/velocity')* 1000.) / (60. * 60.)
         self.MAX_ACCEL = 10.0
+        tau = 0.5  # 1/2(pi*tau) = cutoff frequency
+        ts = 0.02  # sample time
+
+        self.velocity_lpf = LowPassFilter(tau, ts)
+        self.current_velocity = 0
 
         self.last_lane = None
 
@@ -68,6 +74,8 @@ class WaypointUpdater(object):
                 self.publish_waypoints(next_waypoint_idx)
             rate.sleep()
 
+    def velocity_cb(self, msg):
+        self.current_velocity = self.velocity_lpf.filt(msg.twist.linear.x)
 
     def get_next_waypoint_idx(self):
         x = self.pose.pose.position.x
@@ -95,12 +103,7 @@ class WaypointUpdater(object):
         #    len(self.base_waypoints.waypoints),idx, last_idx))
         start_dist = self.distance(self.base_waypoints.waypoints, idx, last_idx)
         x = [ start_dist +1, start_dist ]
-        if self.waypoint_speeds is None:
-            current_velocity = 0
-        elif idx in self.waypoint_speeds:
-            current_velocity = self.waypoint_speeds[idx]
-        else:
-            current_velocity = 0
+        current_velocity = self.current_velocity
         rospy.logwarn("waypoint_updater:  self.waypoint_speeds is None:{0} idx in self.waypoint_speeds:{1} current_velocity:{2}".format(
             self.waypoint_speeds is None, self.waypoint_speeds is not None and idx in self.waypoint_speeds,current_velocity))
         y = [ current_velocity , current_velocity ]
