@@ -107,8 +107,8 @@ class WaypointUpdater(object):
             stopping = True
             dist_stop = self.distance(self.base_waypoints.waypoints, self.stopline_wp_idx, last_idx)
             #stop 3m in front of line
-            dist_stop -= 3
-            x.append(dist_stop)
+            dist_stop += 3
+            x.append(min(dist_stop,3.0))
             y.append(0.0)
 
         if stopping:
