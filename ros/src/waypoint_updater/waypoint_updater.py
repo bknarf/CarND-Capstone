@@ -69,7 +69,7 @@ class WaypointUpdater(object):
             rate.sleep()
 
 
-    def get_next_waypoint_idx(self, pose, waypoints):
+    def get_next_waypoint_idx(self):
         x = self.pose.pose.position.x
         y = self.pose.pose.position.y
         nearest_idx = self.waypoint_tree.query([x,y],1)[1]
