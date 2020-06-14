@@ -127,7 +127,7 @@ class WaypointUpdater(object):
             fixed_speed = y[0]
         else:
             rospy.logwarn(
-                "waypoint_updater: stopping:{0} stopline_idx:{1} x:{2} y:{3}".format(stopping, self.stopline_wp_idx, x,
+                "waypoint_updater: stopping:{0} fixed_speed:{1} stopline_idx:{2} x:{3} y:{4}".format(stopping, fixed_speed, self.stopline_wp_idx, x,
                                                                                      y))
             spline_rep = interpolate.splrep(x, y)
 
@@ -142,14 +142,15 @@ class WaypointUpdater(object):
                 vel = fixed_speed
             else:
                 vel = interpolate.splev(dist, spline_rep, der=0)
+                if stopping:
+                    log_vel.append(vel)
                 if vel < 0.1 and stopping and dist < 1.5:
                     vel=0
                 else:
                     vel = max(vel , 0.2)
             p.twist.twist.linear.x = vel
             self.waypoint_speeds[idx] = vel
-            if stopping:
-                log_vel.append(vel)
+
             new_wps.append(p)
 
         if stopping:
