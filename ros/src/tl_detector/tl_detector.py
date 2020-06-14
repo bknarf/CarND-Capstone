@@ -209,7 +209,7 @@ class StopLight:
         self.before_line_waypoint_indxs = None
         self.after_line_waypoint_indxs = None
 
-        self.view_distance = 100
+        self.view_distance = 50
         #45 deg left and right of -approach direction
         self.half_viewing_angle = np.pi / 4.0
         self.simstate = None
