@@ -165,6 +165,7 @@ class WaypointUpdater(object):
         lane = Lane()
         lane.waypoints = new_wps
         self.final_waypoints_pub.publish(lane)
+        exit()
 
     def pose_cb(self, msg):
         self.pose = msg
