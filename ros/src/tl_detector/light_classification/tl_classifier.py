@@ -25,6 +25,9 @@ class TLClassifier(object):
             image_array = np.asarray(image)
             image_array = image_array[None, :, :, :]
             prediction = self.model.predict(image_array, batch_size=1)
+            rospy.logwarn(
+                "tl_classifier:  prediction:{0}".format(
+                    prediction))
             prediction = np.where(np.isclose(prediction, 1.0))[0][0]
             rospy.logwarn(
                 "tl_classifier:  prediction:{0}".format(
