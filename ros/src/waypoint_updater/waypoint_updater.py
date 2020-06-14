@@ -179,6 +179,8 @@ class WaypointUpdater(object):
 
                 if stopping and abs(dist-dist_stop) < 0.5:
                     vel = 0.0
+                elif vel < 0.1:
+                    vel = 0.0
                 p.twist.twist.linear.x = vel
                 log_vel.append(vel)
                 new_wps.append(p)
