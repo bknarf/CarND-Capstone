@@ -134,14 +134,15 @@ class WaypointUpdater(object):
                 x.append(0.1 * dist_stop)
                 y.append(0.20 * current_velocity)
 
-                x.append(2)
-                y.append(0)
+                if 0.1 * dist_stop > 2.0 and 0.75*dist_stop > 2.0:
+                    x.append(2.0)
+                    y.append(0.0)
 
-                x.append(0)
-                y.append(0)
-                
+                x.append(0.0)
+                y.append(0.0)
+
                 x.append(-1)
-                y.append(0)
+                y.append(0.0)
 
             else:
                 start_dist = max(self.distance(self.base_waypoints.waypoints, idx, end_idx), 2)
