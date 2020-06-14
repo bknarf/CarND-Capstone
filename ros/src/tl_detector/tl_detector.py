@@ -163,7 +163,7 @@ class TLDetector(object):
 
     def get_next_waypoint_idx(self):
 
-        if self.pose is None:
+        if self.pose is None or self.waypoint_tree is None:
             return 0
         else:
             x = self.pose.pose.position.x
