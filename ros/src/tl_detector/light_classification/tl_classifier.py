@@ -4,6 +4,7 @@ import numpy as np
 import os
 import tensorflow as tf
 import rospy
+import cv2
 
 class TLClassifier(object):
     def __init__(self):
@@ -21,6 +22,7 @@ class TLClassifier(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
+        image = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
         with self.graph.as_default():
             image_array = np.asarray(image)
             image_array = image_array[None, :, :, :]

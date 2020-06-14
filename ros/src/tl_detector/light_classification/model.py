@@ -16,17 +16,24 @@ if __name__ == "__main__":
 
     def prepare_images(imgps):
         print("preparing images")
+        distribution = [0,0,0]
         res = []
         for imgp in imgps:
             label = int(imgp.split("#")[1])
             one_hot = [0.0 , 0.0 , 0.0]
             one_hot[label] = 1.0
+            distribution[label] = distribution[label]+2
+            print(one_hot)
             res.append({"path" : imgp,"label" : one_hot,"mirror" : True})
             res.append({"path" : imgp, "label" : one_hot, "mirror" : False})
+        print("count samples: {0}".format(len(res)))
+        for idx, d in enumerate(distribution):
+            print("Label {0}: count:{1} ratio:{2}".format(idx,d,d/len(res)))
         return res
 
 
-    image_paths = glob.glob("/home/workspace/CarND-Capstone/camera_imgs/*.jpg")
+    #image_paths = glob.glob("/home/workspace/CarND-Capstone/camera_imgs/*.jpg")
+    image_paths = glob.glob("/home/bknarf/udacity/auto/CarND-Capstone/camera_imgs/*.jpg")
 
     data = prepare_images(image_paths)
     random.shuffle(data)
@@ -39,6 +46,8 @@ if __name__ == "__main__":
     print("Training samples: {}".format(len(train_data)))
     print("Validation samples: {}".format(len(validation_data)))
     print("Testing samples: {}".format(len(test_data)))
+
+    exit()
 
     import cv2
     #import sklearn as skl
