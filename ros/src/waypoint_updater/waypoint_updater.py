@@ -127,6 +127,8 @@ class WaypointUpdater(object):
                 stopping = True
                 dist_stop = max(self.distance(self.base_waypoints.waypoints, stopline_wp_idx, end_idx),0.5)
                 end_idx = stopline_wp_idx
+                x.append(0.5*dist_stop)
+                y.append(0.5*current_velocity)
                 x.append(dist_stop)
                 y.append(0.0)
                 x.append(0)
