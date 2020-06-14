@@ -116,23 +116,20 @@ class WaypointUpdater(object):
         else:
             #either stopping, standing still or starting or manual control
 
-            start_dist = self.distance(self.base_waypoints.waypoints, idx, end_idx)
+
 
             current_velocity = self.current_velocity
             self.last_stopline_wp_idx = stopline_wp_idx
 
             if stopline_wp_idx > idx:
-                x = [start_dist +2, start_dist + 1, start_dist]
+                end_idx = stopline_wp_idx
+                dist_stop = max(self.distance(self.base_waypoints.waypoints, idx, end_idx),2)
+                x = [dist_stop +2, dist_stop  + 1, dist_stop ]
                 y = [current_velocity, current_velocity, current_velocity]
                 stopping = True
-                dist_stop = max(self.distance(self.base_waypoints.waypoints, stopline_wp_idx, end_idx),0.5)
-                end_idx = stopline_wp_idx
 
-                if 0.5*start_dist < dist_stop:
-                    x.append(0.5*start_dist)
-                    y.append(0.5*current_velocity)
-                x.append(dist_stop)
-                y.append(0.0)
+                x.append(0.5*dist_stop)
+                y.append(0.5*current_velocity)
                 x.append(0)
                 y.append(0)
                 x.append(-1)
