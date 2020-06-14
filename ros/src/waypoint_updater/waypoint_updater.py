@@ -89,25 +89,26 @@ class WaypointUpdater(object):
 
     def publish_waypoints(self,idx):
         idx = max(0, idx)
+        last_idx = min(idx + LOOKAHEAD_WPS,len(self.base_waypoints.waypoints))
         rospy.logwarn("waypoint_updater:  next waypoint index = {0}".format(idx))
         rospy.logwarn("waypoint_updater:  len(base_waypoints.waypoints):{0} wp1:{1} wp2:{2}".format(
-            len(self.base_waypoints.waypoints),idx, min(idx + LOOKAHEAD_WPS,len(self.base_waypoints.waypoints))))
-        start_dist = self.distance(self.base_waypoints.waypoints, idx, min(idx + LOOKAHEAD_WPS,len(self.base_waypoints.waypoints)))
+            len(self.base_waypoints.waypoints),idx, last_idx))
+        start_dist = self.distance(self.base_waypoints.waypoints, idx, last_idx)
         x = [ start_dist +1, start_dist ]
         current_velocity = self.current_velocity
         y = [ current_velocity , current_velocity ]
-        if self.stopline_wp_idx > idx and self.stopline_wp_idx < idx + LOOKAHEAD_WPS:
-            dist_stop = self.distance(self.base_waypoints.waypoints, self.stopline_wp_idx, idx+LOOKAHEAD_WPS)
+        if self.stopline_wp_idx > idx and self.stopline_wp_idx < last_idx:
+            dist_stop = self.distance(self.base_waypoints.waypoints, self.stopline_wp_idx, last_idx)
             #stop 3m in front of line
             dist_stop -= 3
             x.append(dist_stop)
             y.append(0.0)
 
         x.append(0)
-        y.append(self.base_waypoints.waypoints[idx+LOOKAHEAD_WPS].twist.twist.linear.x)
+        y.append(self.base_waypoints.waypoints[last_idx].twist.twist.linear.x)
 
         x.append(-1.0)
-        y.append(self.base_waypoints.waypoints[idx + LOOKAHEAD_WPS].twist.twist.linear.x)
+        y.append(y[-1])
 
         x.reverse()
         y.reverse()
@@ -116,14 +117,14 @@ class WaypointUpdater(object):
 
         spline_rep = interpolate.splrep(x, y)
         new_wps = []
-        for i in range(idx, min(idx + LOOKAHEAD_WPS,len(self.base_waypoints.waypoints))):
+        for i in range(idx, last_idx):
             p = Waypoint()
             p.pose = self.base_waypoints.waypoints[i].pose
-            dist = self.distance(self.base_waypoints.waypoints,i,min(idx + LOOKAHEAD_WPS,len(self.base_waypoints.waypoints)))
+            dist = self.distance(self.base_waypoints.waypoints,i,last_idx)
             vel = interpolate.splev(dist, spline_rep, der=0)
             p.twist.twist.linear.x = vel
             new_wps.append(p)
-            
+
         Lane.waypoints = new_wps
         self.final_waypoints_pub.publish(lane)
 
