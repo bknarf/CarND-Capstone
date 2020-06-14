@@ -101,7 +101,6 @@ class WaypointUpdater(object):
             current_velocity = self.waypoint_speeds[idx]
         else:
             current_velocity = 0
-
         y = [ current_velocity , current_velocity ]
         stopping = False
         if self.stopline_wp_idx > idx and self.stopline_wp_idx < last_idx:

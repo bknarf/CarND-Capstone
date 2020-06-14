@@ -159,10 +159,12 @@ class TLDetector(object):
         self.count_predictions += 1
         if state == relevant_tls[0].simstate :
             self.count_correct_predictions += 1
+        """
         rospy.logwarn(
             "tl_detector:  traffic light prediction_accuracy:{0:f} predictions:{1} correct predictions:{2} current_stop_line:{3} state:{4}".format(
                 self.count_correct_predictions/self.count_predictions, self.count_predictions, self.count_correct_predictions,
                 relevant_tls[0].line_waypoint_idx, state))
+        """
 
         return relevant_tls[0].line_waypoint_idx, state
 
