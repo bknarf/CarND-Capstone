@@ -112,7 +112,7 @@ class WaypointUpdater(object):
         if stopping:
             x.append(0)
             y.append(0)
-            log_vel = []
+
         else:
             x.append(0)
             y.append(min(self.MAX_VELOCITY,self.base_waypoints.waypoints[last_idx].twist.twist.linear.x))
@@ -134,6 +134,7 @@ class WaypointUpdater(object):
 
         new_wps = []
         self.waypoint_speeds = {}
+        log_vel = []
         for i in range(idx, last_idx):
             p = Waypoint()
             p.pose = self.base_waypoints.waypoints[i].pose
@@ -142,20 +143,19 @@ class WaypointUpdater(object):
                 vel = fixed_speed
             else:
                 vel = interpolate.splev(dist, spline_rep, der=0).sum()
-                if stopping:
-                    log_vel.append(vel)
-                if vel < 0.1 and stopping and dist < 1.5:
+
+                if vel < 0.1 and stopping and dist < 1:
                     vel=0
                 else:
                     vel = max(vel , 0.2)
             p.twist.twist.linear.x = vel
             self.waypoint_speeds[idx] = vel
-
+            log_vel.append(vel)
             new_wps.append(p)
 
-        if stopping:
-            rospy.logwarn(
-                "waypoint_updater: stopping velocities:{0} ".format(log_vel))
+
+        rospy.logwarn(
+            "waypoint_updater: velocities:{0} ".format(log_vel))
         lane = Lane()
         lane.waypoints = new_wps
         self.final_waypoints_pub.publish(lane)
