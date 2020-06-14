@@ -106,7 +106,7 @@ class WaypointUpdater(object):
                 and not (stopline_wp_idx > idx and stopline_wp_idx < end_idx):
             #reuse and extend the waypoints
             used_up = idx - self.published_waypoints_offset
-            self.published_waypoints = self.published_waypoints[used_up - 1:]
+            self.published_waypoints = self.published_waypoints[used_up:]
             self.published_waypoints_offset = idx
             if len(self.published_waypoints) < LOOKAHEAD_WPS:
                 #cruising and we should copy over some waypoints
