@@ -158,10 +158,10 @@ class TLDetector(object):
         relevant_tls[0].capture_img(self.camera_image, ego_wp_idx, state)
         self.count_predictions += 1
         if state == relevant_tls[0].simstate :
-            self.count_correct_predictions +=1
+            self.count_correct_predictions += 1
         rospy.logwarn(
-            "tl_detector:  traffic light prediction_accuracy:{0}".format(
-                self.count_correct_predictions/self.count_predictions))
+            "tl_detector:  traffic light prediction_accuracy:{0} predictions:{1} correct predictions:{2}".format(
+                self.count_correct_predictions/self.count_predictions, self.count_predictions, self.count_correct_predictions))
 
         return relevant_tls[0].line_waypoint_idx, state
 
