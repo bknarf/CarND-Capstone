@@ -145,15 +145,17 @@ class WaypointUpdater(object):
             p = Waypoint()
             p.pose = self.base_waypoints.waypoints[i].pose
             dist = self.distance(self.base_waypoints.waypoints,i,last_idx)
-            if fixed_speed:
+            if i == idx:
+                vel = current_velocity
+            elif fixed_speed:
                 vel = fixed_speed
             else:
                 vel = interpolate.splev(dist, spline_rep, der=0).sum()
 
-                if vel < 0.1 and stopping and dist < 1:
-                    vel = 0.0
-                else:
-                    vel = max(vel , 0.2)
+            if vel < 0.1 and stopping and dist < 1:
+                vel = 0.0
+            else:
+                vel = max(vel , 0.2)
             p.twist.twist.linear.x = vel
             self.waypoint_speeds[idx] = vel
             log_vel.append(vel)
@@ -165,7 +167,7 @@ class WaypointUpdater(object):
         lane = Lane()
         lane.waypoints = new_wps
         self.final_waypoints_pub.publish(lane)
-        exit()
+        #exit()
 
     def pose_cb(self, msg):
         self.pose = msg
