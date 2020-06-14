@@ -105,6 +105,10 @@ class WaypointUpdater(object):
 
         x.append(0)
         y.append(self.base_waypoints.waypoints[idx+LOOKAHEAD_WPS])
+
+        x.reverse()
+        y.reverse()
+        
         spline_rep = interpolate.splrep(x, y)
         if self.stopline_wp_idx > idx and self.stopline_wp_idx < idx+LOOKAHEAD_WPS :
             #decelerating for traffic light
