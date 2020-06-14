@@ -103,8 +103,7 @@ class WaypointUpdater(object):
         stopline_wp_idx = self.stopline_wp_idx
         stopping = False
         if self.published_waypoints is not None and self.last_stopline_wp_idx == stopline_wp_idx\
-            and self.published_waypoints_offset + len(self.published_waypoints) > stopline_wp_idx\
-                and stopline_wp_idx > idx  and abs(idx - self.published_waypoints_offset) < 5:
+            and  abs(idx - self.published_waypoints_offset) < 5:
             #reuse and extend the waypoints
             used_up = idx - self.published_waypoints_offset
             self.published_waypoints = self.published_waypoints[used_up:]
