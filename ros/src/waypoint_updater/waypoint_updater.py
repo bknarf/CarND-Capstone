@@ -138,7 +138,7 @@ class WaypointUpdater(object):
                 diff_vel = target_velocity-current_velocity
                 safe_accel = 0.8*self.MAX_ACCEL
                 t = abs(diff_vel/safe_accel)
-                dist_t = start_dist - (t*current_velocity + math.copysign(0.5*safe_accel**2,diff_vel))
+                dist_t = start_dist - (t*current_velocity + math.copysign(0.5*safe_accel,diff_vel)*t**2)
                 x.append(dist_t)
                 y.append(target_velocity)
                 if dist_t < 0:
