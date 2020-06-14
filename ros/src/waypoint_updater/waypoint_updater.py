@@ -127,7 +127,7 @@ class WaypointUpdater(object):
 
         lane = Lane()
 
-        rospy.logwarn("waypoint_updater: stopping:{0} x:{1} y:{2}".format(stopping,x,y))
+        rospy.logwarn("waypoint_updater: stopping:{0} stopline_idx:{1} x:{2} y:{3}".format(stopping,self.stopline_wp_idx,x,y))
         spline_rep = interpolate.splrep(x, y)
         new_wps = []
         self.waypoint_speeds = {}
