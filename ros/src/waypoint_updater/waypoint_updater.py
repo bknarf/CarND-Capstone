@@ -122,6 +122,8 @@ class WaypointUpdater(object):
             p.pose = self.base_waypoints.waypoints[i].pose
             dist = self.distance(self.base_waypoints.waypoints,i,last_idx)
             vel = interpolate.splev(dist, spline_rep, der=0)
+            if vel < 0.1:
+                vel=0
             p.twist.twist.linear.x = vel
             new_wps.append(p)
 
