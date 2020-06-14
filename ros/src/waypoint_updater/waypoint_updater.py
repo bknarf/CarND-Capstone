@@ -126,10 +126,14 @@ class WaypointUpdater(object):
         if (not stopping and abs(y[-1]-y[0]) < 0.5):
             fixed_speed = y[0]
         else:
-            rospy.logwarn(
-                "waypoint_updater: stopping:{0} fixed_speed:{1} stopline_idx:{2} x:{3} y:{4}".format(stopping, fixed_speed, self.stopline_wp_idx, x,
-                                                                                     y))
             spline_rep = interpolate.splrep(x, y)
+
+        rospy.logwarn(
+            "waypoint_updater: stopping:{0} fixed_speed:{1} stopline_idx:{2} x:{3} y:{4}".format(stopping, fixed_speed,
+                                                                                                 self.stopline_wp_idx,
+                                                                                                 x,
+                                                                                                 y))
+
 
 
         new_wps = []
