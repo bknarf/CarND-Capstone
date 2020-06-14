@@ -130,10 +130,16 @@ class WaypointUpdater(object):
 
                 x.append(0.75*dist_stop)
                 y.append(0.75*current_velocity)
+
                 x.append(0.1 * dist_stop)
                 y.append(0.20 * current_velocity)
+
+                x.append(2)
+                y.append(0)
+
                 x.append(0)
                 y.append(0)
+                
                 x.append(-1)
                 y.append(0)
 
