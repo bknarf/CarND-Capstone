@@ -185,7 +185,7 @@ class WaypointUpdater(object):
                 else:
                     vel = interpolate.splev(dist, spline_rep, der=0).sum()
 
-                if stopping and abs(dist-dist_stop) < 0.5:
+                if stopping and abs(dist) < 0.5:
                     vel = 0.0
                 elif vel < 0.1:
                     vel = 0.0
