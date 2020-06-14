@@ -93,7 +93,7 @@ class WaypointUpdater(object):
         rospy.logwarn("waypoint_updater:  len(base_waypoints.waypoints):{0} wp1:{1} wp2:{2}".format(
             len(self.base_waypoints.waypoints),idx, min(idx + LOOKAHEAD_WPS,len(self.base_waypoints.waypoints))))
         start_dist = self.distance(self.base_waypoints.waypoints, idx, min(idx + LOOKAHEAD_WPS,len(self.base_waypoints.waypoints)))
-        x = [ start_dist - 1, start_dist ]
+        x = [ start_dist +1, start_dist ]
         current_velocity = self.current_velocity
         y = [ current_velocity , current_velocity ]
         if self.stopline_wp_idx > idx and self.stopline_wp_idx < idx + LOOKAHEAD_WPS:
@@ -104,11 +104,16 @@ class WaypointUpdater(object):
             y.append(0.0)
 
         x.append(0)
-        y.append(self.base_waypoints.waypoints[idx+LOOKAHEAD_WPS])
+        y.append(self.base_waypoints.waypoints[idx+LOOKAHEAD_WPS].twist.twist.linear.x)
+
+        x.append(-1.0)
+        y.append(self.base_waypoints.waypoints[idx + LOOKAHEAD_WPS].twist.twist.linear.x)
 
         x.reverse()
         y.reverse()
-        
+
+        lane = Lane()
+
         spline_rep = interpolate.splrep(x, y)
         if self.stopline_wp_idx > idx and self.stopline_wp_idx < idx+LOOKAHEAD_WPS :
             #decelerating for traffic light
