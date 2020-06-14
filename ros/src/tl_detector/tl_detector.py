@@ -75,10 +75,10 @@ class TLDetector(object):
             for tl in self.stop_lights:
                 tl.set_waypoint_tree(self.waypoint_tree)
             rospy.logwarn(
-                "tl_detector:  finished waypoints_cb and set waypoint_tree. waypoint_tree is None:".format(self.waypoint_tree is None))
+                "tl_detector:  finished waypoints_cb and set waypoint_tree. waypoint_tree is None:{0}".format(self.waypoint_tree is None))
         else:
             rospy.logwarn(
-                "tl_detector:  waypoints_cb was called but waypoint tree was already set. waypoint_tree is None:".format(
+                "tl_detector:  waypoints_cb was called but waypoint tree was already set. waypoint_tree is None:{0}".format(
                     self.waypoint_tree is None))
 
     def traffic_cb(self, msg):

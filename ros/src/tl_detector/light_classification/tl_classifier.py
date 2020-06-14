@@ -1,5 +1,6 @@
 from styx_msgs.msg import TrafficLight
 from keras.models import load_model
+import numpy as np
 import os
 
 class TLClassifier(object):
@@ -18,5 +19,7 @@ class TLClassifier(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
-        prediction = int(self.model.predict(image, batch_size=1))
+        image_array = np.asarray(image)
+        image_array = image_array[None, :, :, :]
+        prediction = int(self.model.predict(image_array, batch_size=1))
         return prediction
