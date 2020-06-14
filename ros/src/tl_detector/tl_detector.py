@@ -113,6 +113,7 @@ class TLDetector(object):
         of times till we start using it. Otherwise the previous stable state is
         used.
         '''
+        """
         if self.state != state:
             self.state_count = 0
             self.state = state
@@ -124,6 +125,9 @@ class TLDetector(object):
         else:
             self.upcoming_red_light_pub.publish(Int32(self.last_wp))
         self.state_count += 1
+        """
+        light_wp = light_wp if state == TrafficLight.RED or state == TrafficLight.YELLOW else -1
+        self.upcoming_red_light_pub.publish(Int32(light_wp))
 
 
     def process_traffic_lights(self):
