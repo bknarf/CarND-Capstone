@@ -106,8 +106,12 @@ class WaypointUpdater(object):
             x.append(dist_stop)
             y.append(0.0)
 
-        x.append(0)
-        y.append(self.base_waypoints.waypoints[last_idx].twist.twist.linear.x)
+        if stopping:
+            x.append(0)
+            y.append(0)
+        else:
+            x.append(0)
+            y.append(self.base_waypoints.waypoints[last_idx].twist.twist.linear.x)
 
         x.append(-1.0)
         y.append(y[-1])
