@@ -206,7 +206,7 @@ class StopLight:
         #45 deg left and right of -approach direction
         self.half_viewing_angle = np.pi / 4.0
         self.simstate = None
-        self.capture_images = True
+        self.capture_images = False
         self.capture_every_X_image = 3
         self.capture_counter = 0
         self.capture_image_path = "./captured_images"
@@ -229,9 +229,6 @@ class StopLight:
     def find_waypoint_idxs(self):
         if not (self.line_position is None or self.waypoint_tree is None or self.light_position is None):
             if not self.line_waypoint_idx:
-                rospy.logwarn(
-                    "tl_detector:  start finding line_waypoint_idx. name:{0}".format(
-                        self.name))
                 nearest_line_idx = self.waypoint_tree.query(self.line_position,1)[1]
                 nearest_line_xy = np.array(self.waypoint_tree.data[nearest_line_idx])
                 # double signed_dist = b_dir_ego.dot(b_point_nb - b_center_ego);
@@ -241,9 +238,6 @@ class StopLight:
                     # the nearest waypoint is behind the stop line
                     nearest_line_idx -= 1
                 self.line_waypoint_idx = nearest_line_idx
-                rospy.logwarn(
-                    "tl_detector:  Found line_waypoint_idx. name:{0} line_waypoint_idx{1}".format(
-                        self.name,self.line_waypoint_idx))
 
                 angle_between = 0
                 distance_to_line = 0
