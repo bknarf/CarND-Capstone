@@ -97,7 +97,9 @@ class WaypointUpdater(object):
         x = [ start_dist +1, start_dist ]
         current_velocity = self.current_velocity
         y = [ current_velocity , current_velocity ]
+        stopping = False
         if self.stopline_wp_idx > idx and self.stopline_wp_idx < last_idx:
+            stopping = True
             dist_stop = self.distance(self.base_waypoints.waypoints, self.stopline_wp_idx, last_idx)
             #stop 3m in front of line
             dist_stop -= 3
@@ -122,8 +124,10 @@ class WaypointUpdater(object):
             p.pose = self.base_waypoints.waypoints[i].pose
             dist = self.distance(self.base_waypoints.waypoints,i,last_idx)
             vel = interpolate.splev(dist, spline_rep, der=0)
-            if vel < 0.1:
+            if vel < 0.1 and stopping:
                 vel=0
+            else:
+                vel = max(vel , 0.2)
             p.twist.twist.linear.x = vel
             new_wps.append(p)
 
