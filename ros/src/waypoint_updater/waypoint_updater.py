@@ -93,6 +93,8 @@ class WaypointUpdater(object):
         lane = Lane()
         lane.header = self.base_waypoints.header
         lane.waypoints = self.base_waypoints.waypoints[idx:idx+LOOKAHEAD_WPS]
+        rospy.logwarn("waypoint_updater:  len(base_waypoints.waypoints):{0} wp1:{1} wp2:{2}".format(
+            len(self.base_waypoints.waypoints),idx, min(idx + LOOKAHEAD_WPS,len(self.base_waypoints.waypoints))))
         start_dist = self.distance(lane.waypoints, idx, min(idx + LOOKAHEAD_WPS,len(self.base_waypoints.waypoints)))
         x = [ start_dist - 1, start_dist ]
         current_velocity = self.current_velocity
