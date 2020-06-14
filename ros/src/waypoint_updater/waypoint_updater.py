@@ -100,15 +100,15 @@ class WaypointUpdater(object):
     def publish_waypoints(self,idx):
         idx = max(0, idx)
         end_idx = min(idx + LOOKAHEAD_WPS,len(self.base_waypoints.waypoints)-1)
-
+        stopline_wp_idx = self.stopline_wp_idx
         stopping = False
-        if self.published_waypoints is not None and self.last_stopline_wp_idx == self.stopline_wp_idx\
-                and not (self.stopline_wp_idx > idx and self.stopline_wp_idx < end_idx):
+        if self.published_waypoints is not None and self.last_stopline_wp_idx == stopline_wp_idx\
+                and not (stopline_wp_idx > idx and stopline_wp_idx < end_idx):
             #reuse and extend the waypoints
             used_up = idx - self.published_waypoints_offset
             self.published_waypoints = self.published_waypoints[used_up - 1:]
             self.published_waypoints_offset = idx
-            if self.stopline_wp_idx == -1 and len(self.published_waypoints) < LOOKAHEAD_WPS:
+            if stopline_wp_idx == -1 and len(self.published_waypoints) < LOOKAHEAD_WPS:
                 #cruising and we should copy over some waypoints
                 first_copied = idx+len(self.published_waypoints)
                 if first_copied < len(self.base_waypoints.waypoints):
@@ -120,10 +120,11 @@ class WaypointUpdater(object):
             x = [start_dist + 1, start_dist]
             current_velocity = self.current_velocity
 
+            self.last_stopline_wp_idx = stopline_wp_idx
             y = [current_velocity, current_velocity]
-            if self.stopline_wp_idx > idx and self.stopline_wp_idx < end_idx:
+            if stopline_wp_idx > idx and stopline_wp_idx < end_idx:
                 stopping = True
-                dist_stop = self.distance(self.base_waypoints.waypoints, self.stopline_wp_idx, end_idx)
+                dist_stop = self.distance(self.base_waypoints.waypoints, stopline_wp_idx, end_idx)
                 x.append(max(dist_stop,0.5))
                 y.append(0.0)
                 x.append(0)
@@ -156,7 +157,7 @@ class WaypointUpdater(object):
 
             rospy.logwarn(
                 "waypoint_updater: stopping:{0} fixed_speed:{1} stopline_idx:{2} x:{3} y:{4}".format(stopping, fixed_speed,
-                                                                                                     self.stopline_wp_idx,
+                                                                                                     stopline_wp_idx,
                                                                                                      x,
                                                                                                      y))
             new_wps = []
@@ -181,6 +182,7 @@ class WaypointUpdater(object):
                 new_wps.append(p)
             self.published_waypoints = new_wps
             self.published_waypoints_offset = idx
+
             rospy.logwarn(
                 "waypoint_updater: velocities:{0} ".format(log_vel))
 
