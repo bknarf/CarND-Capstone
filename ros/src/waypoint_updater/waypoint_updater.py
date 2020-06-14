@@ -103,7 +103,7 @@ class WaypointUpdater(object):
         stopline_wp_idx = self.stopline_wp_idx
         stopping = False
         if self.published_waypoints is not None and self.last_stopline_wp_idx == stopline_wp_idx\
-                and not (stopline_wp_idx > idx and stopline_wp_idx < end_idx):
+                and not (stopline_wp_idx > idx and stopline_wp_idx < end_idx) and abs(idx - self.published_waypoints_offset) < 5:
             #reuse and extend the waypoints
             used_up = idx - self.published_waypoints_offset
             self.published_waypoints = self.published_waypoints[used_up:]
@@ -117,7 +117,7 @@ class WaypointUpdater(object):
                     "waypoint_updater: idx:{0} len(self.published_waypoints):{1} : first_copied:{2} end_idx:{3}".format(idx,
                         len(self.published_waypoints), first_copied, end_idx))
         else:
-            #either stopping, standing still or starting
+            #either stopping, standing still or starting or manual control
 
             start_dist = self.distance(self.base_waypoints.waypoints, idx, end_idx)
             x = [start_dist + 1, start_dist]
