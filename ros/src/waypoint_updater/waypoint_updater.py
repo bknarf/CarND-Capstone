@@ -115,14 +115,16 @@ class WaypointUpdater(object):
         lane = Lane()
 
         spline_rep = interpolate.splrep(x, y)
+        new_wps = []
         for i in range(idx, min(idx + LOOKAHEAD_WPS,len(self.base_waypoints.waypoints))):
             p = Waypoint()
             p.pose = self.base_waypoints.waypoints[i].pose
             dist = self.distance(self.base_waypoints.waypoints,i,min(idx + LOOKAHEAD_WPS,len(self.base_waypoints.waypoints)))
             vel = interpolate.splev(dist, spline_rep, der=0)
             p.twist.twist.linear.x = vel
-            Lane.waypoints.append(p)
-
+            new_wps.append(p)
+            
+        Lane.waypoints = new_wps
         self.final_waypoints_pub.publish(lane)
 
     def pose_cb(self, msg):
