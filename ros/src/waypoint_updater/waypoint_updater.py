@@ -125,7 +125,7 @@ class WaypointUpdater(object):
             p.twist.twist.linear.x = vel
             new_wps.append(p)
 
-        Lane.waypoints = new_wps
+        lane.waypoints = new_wps
         self.final_waypoints_pub.publish(lane)
 
     def pose_cb(self, msg):
