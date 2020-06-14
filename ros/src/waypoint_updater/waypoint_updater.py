@@ -90,12 +90,9 @@ class WaypointUpdater(object):
     def publish_waypoints(self,idx):
         idx = max(0, idx)
         rospy.logwarn("waypoint_updater:  next waypoint index = {0}".format(idx))
-        lane = Lane()
-        lane.header = self.base_waypoints.header
-        lane.waypoints = self.base_waypoints.waypoints[idx:idx+LOOKAHEAD_WPS]
         rospy.logwarn("waypoint_updater:  len(base_waypoints.waypoints):{0} wp1:{1} wp2:{2}".format(
             len(self.base_waypoints.waypoints),idx, min(idx + LOOKAHEAD_WPS,len(self.base_waypoints.waypoints))))
-        start_dist = self.distance(lane.waypoints, idx, min(idx + LOOKAHEAD_WPS,len(self.base_waypoints.waypoints)))
+        start_dist = self.distance(self.base_waypoints.waypoints, idx, min(idx + LOOKAHEAD_WPS,len(self.base_waypoints.waypoints)))
         x = [ start_dist - 1, start_dist ]
         current_velocity = self.current_velocity
         y = [ current_velocity , current_velocity ]
@@ -124,8 +121,8 @@ class WaypointUpdater(object):
         self.pose = msg
 
     def waypoints_cb(self, waypoints):
-        self.base_waypoints = waypoints
         if not self.waypoints_2d:
+            self.base_waypoints = waypoints
             self.waypoints_2d = []
             for wp in waypoints.waypoints:
                 self.waypoints_2d.append([wp.pose.pose.position.x, wp.pose.pose.position.y])
