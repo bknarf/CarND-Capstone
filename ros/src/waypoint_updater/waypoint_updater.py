@@ -108,13 +108,14 @@ class WaypointUpdater(object):
             used_up = idx - self.published_waypoints_offset
             self.published_waypoints = self.published_waypoints[used_up - 1:]
             self.published_waypoints_offset = idx
-            if stopline_wp_idx == -1 and len(self.published_waypoints) < LOOKAHEAD_WPS:
+            if len(self.published_waypoints) < LOOKAHEAD_WPS:
                 #cruising and we should copy over some waypoints
                 first_copied = idx+len(self.published_waypoints)
                 if first_copied < len(self.base_waypoints.waypoints):
                     self.published_waypoints.extend(self.base_waypoints.waypoints[first_copied:end_idx])
-            rospy.logwarn(
-                "waypoint_updater: self.published_waypoints:{0} ".format(self.published_waypoints))
+                rospy.logwarn(
+                    "waypoint_updater: idx:{0} len(self.published_waypoints):{1} : first_copied:{2} end_idx:{3}".format(idx,
+                        len(self.published_waypoints), first_copied, end_idx))
         else:
             #either stopping, standing still or starting
 
