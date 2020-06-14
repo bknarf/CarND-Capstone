@@ -30,7 +30,7 @@ class TLClassifier(object):
             rospy.logwarn(
                 "tl_classifier:  prediction:{0}".format(
                     prediction))
-            prediction = np.where(np.isclose(prediction, 1.0))[0][0]
+            prediction = np.argmax(prediction)
             rospy.logwarn(
                 "tl_classifier:  prediction:{0}".format(
                     prediction))
