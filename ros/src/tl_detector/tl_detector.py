@@ -24,7 +24,6 @@ class TLDetector(object):
         rospy.init_node('tl_detector')
 
         self.pose = None
-        self.waypoints = None
         self.camera_image = None
 
         sub1 = rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
@@ -48,8 +47,7 @@ class TLDetector(object):
         self.upcoming_red_light_pub = rospy.Publisher('/traffic_waypoint', Int32, queue_size=1)
 
         self.bridge = CvBridge()
-        self.light_classifier = TLClassifier()
-        self.listener = tf.TransformListener()
+
         self.count_predictions = 0
         self.count_correct_predictions = 0
 
@@ -60,20 +58,28 @@ class TLDetector(object):
         self.last_wp = -1
         self.state_count = 0
 
+        self.light_classifier = TLClassifier()
+        self.listener = tf.TransformListener()
+
         rospy.spin()
 
     def pose_cb(self, msg):
         self.pose = msg
 
     def waypoints_cb(self, waypoints):
-        self.waypoints = waypoints
-        waypoints_2d = []
-        for wp in waypoints.waypoints:
-            waypoints_2d.append(np.array([wp.pose.pose.position.x, wp.pose.pose.position.y]))
-        waypoint_tree = KDTree(waypoints_2d)
-        for tl in self.stop_lights:
-            tl.set_waypoint_tree(waypoint_tree)
-        self.waypoint_tree = waypoint_tree
+        if self.waypoint_tree is None:
+            waypoints_2d = []
+            for wp in waypoints.waypoints:
+                waypoints_2d.append(np.array([wp.pose.pose.position.x, wp.pose.pose.position.y]))
+            self.waypoint_tree = KDTree(waypoints_2d)
+            for tl in self.stop_lights:
+                tl.set_waypoint_tree(self.waypoint_tree)
+            rospy.logwarn(
+                "tl_detector:  finished waypoints_cb and set waypoint_tree. waypoint_tree is None:".format(self.waypoint_tree is None))
+        else:
+            rospy.logwarn(
+                "tl_detector:  waypoints_cb was called but waypoint tree was already set. waypoint_tree is None:".format(
+                    self.waypoint_tree is None))
 
     def traffic_cb(self, msg):
         """
