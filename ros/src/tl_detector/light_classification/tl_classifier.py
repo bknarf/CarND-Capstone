@@ -4,7 +4,7 @@ import os
 
 class TLClassifier(object):
     def __init__(self):
-        self.modelpath = os.path.join(os.path.abspath(__file__),"model_96.h5")
+        self.modelpath = os.path.join(os.path.split(os.path.abspath(__file__))[0],"model_96.h5")
         self.model = load_model(self.modelpath)
         pass
 
