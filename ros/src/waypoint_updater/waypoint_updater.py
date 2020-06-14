@@ -89,10 +89,11 @@ class WaypointUpdater(object):
 
     def publish_waypoints(self,idx):
         #rospy.logwarn("waypoint_updater:  next waypoint index = {0}".format(idx))
+        idx = max(0,idx)
         lane = Lane()
         lane.header = self.base_waypoints.header
         lane.waypoints = self.base_waypoints.waypoints[idx:idx+LOOKAHEAD_WPS]
-        start_dist = self.distance(lane.waypoints, idx, idx + LOOKAHEAD_WPS)
+        start_dist = self.distance(lane.waypoints, idx, min(idx + LOOKAHEAD_WPS,len(self.base_waypoints.waypoints)))
         x = [ start_dist - 1, start_dist ]
         current_velocity = self.current_velocity
         y = [ current_velocity , current_velocity ]
