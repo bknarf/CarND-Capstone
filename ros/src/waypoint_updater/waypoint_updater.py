@@ -126,17 +126,25 @@ class WaypointUpdater(object):
                 dist_stop = self.distance(self.base_waypoints.waypoints, self.stopline_wp_idx, end_idx)
                 x.append(max(dist_stop,0.5))
                 y.append(0.0)
-
-            if stopping:
                 x.append(0)
                 y.append(0)
 
             else:
-                x.append(0)
-                y.append(min(self.MAX_VELOCITY,self.base_waypoints.waypoints[end_idx].twist.twist.linear.x))
-
-            x.append(-1.0)
-            y.append(y[-1])
+                target_velocity = min(self.MAX_VELOCITY,self.base_waypoints.waypoints[end_idx].twist.twist.linear.x)
+                diff_vel = target_velocity-current_velocity
+                safe_accel = 0.2*self.MAX_ACCEL
+                t = abs(diff_vel/safe_accel)
+                dist_t = start_dist - (t*current_velocity + math.copysign(0.5*safe_accel**2,diff_vel))
+                x.append(dist_t)
+                y.append(target_velocity)
+                if dist_t < 0:
+                    x.append(dist_t-10)
+                    y.append(target_velocity)
+                else:
+                    x.append(0)
+                    y.append(target_velocity)
+                    x.append(-1.0)
+                    y.append(y[-1])
 
             x.reverse()
             y.reverse()
