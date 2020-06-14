@@ -213,7 +213,7 @@ class StopLight:
         self.capture_every_X_image = 3
         self.capture_counter = 0
         self.capture_image_path = "./captured_images"
-        self.capture_error_images = True
+        self.capture_error_images = False
         self.error_image_path = "./error_images"
 
     def set_light_position(self, light_position):
