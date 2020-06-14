@@ -177,9 +177,8 @@ class WaypointUpdater(object):
                 p = Waypoint()
                 p.pose = self.base_waypoints.waypoints[i].pose
                 dist = self.distance(self.base_waypoints.waypoints,i,end_idx)
-                if i == idx:
-                    vel = current_velocity
-                elif fixed_speed:
+
+                if fixed_speed:
                     vel = fixed_speed
                 else:
                     vel = interpolate.splev(dist, spline_rep, der=0).sum()
