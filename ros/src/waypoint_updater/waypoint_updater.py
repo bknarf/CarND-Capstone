@@ -121,11 +121,12 @@ class WaypointUpdater(object):
             current_velocity = self.current_velocity
             self.last_stopline_wp_idx = stopline_wp_idx
 
-            if stopline_wp_idx > idx and stopline_wp_idx < end_idx:
+            if stopline_wp_idx > idx:
                 x = [start_dist + 1, start_dist]
                 y = [current_velocity, current_velocity]
                 stopping = True
                 dist_stop = max(self.distance(self.base_waypoints.waypoints, stopline_wp_idx, end_idx),0.5)
+                end_idx = stopline_wp_idx
                 x.append(dist_stop)
                 y.append(0.0)
                 x.append(0)
